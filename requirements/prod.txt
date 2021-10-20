@@ -1,0 +1,13 @@
+flask
+peewee
+requests
+flask-WTF
+Babel
+Flask-Babel
+wtforms
+PyJWT
+humanfriendly
+qrcode
+pillow
+requests_oauthlib
+atlassian-python-api[jira]
