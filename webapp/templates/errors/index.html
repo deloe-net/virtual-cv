@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="{{ get_locale().language }}" dir="ltr">
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+        <title data-i18n="err_{{ page_code }}_webapp_title"></title>
+
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <style id="" media="all"></style>
+
+        {% include 'common/headers/analytics.html' %}
+        {% include 'common/headers/jquery.html' %}
+        {% include 'common/headers/jquery.i18n.html' %}
+        {% include 'common/headers/bundle.html' %}
+
+        <meta name="robots" content="noindex, nofollow" />
+    </head>
+    <body>
+        <div id="errpage">
+            <div class="errpage">
+                <div class="errpage-{{ page_code }}"></div>
+                <h1>{{ page_code }}</h1>
+                <h2 data-i18n="err_{{ page_code }}_short_text"></h2>
+                <p data-i18n="err_{{ page_code }}_full_text"></p>
+                <a href="{{ url_for('frontend_home.home_page') }}" data-i18n="back_btn_title"></a>
+            </div>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,19 @@
+{% extends "common/base.html" %}
+
+{% block body %}
+    <div class="container text-center text-lg-left">
+        <div class="clearfix">
+            {% if len(available_languages) > 1 %}
+            <select class="selectpicker" data-width="fit" id="lang-selector">
+                {% for lang in available_languages %}
+                <option value="{{ lang.language }}"{% if lang.language == get_locale().language %} selected="{{ lang.language }}"{% endif %}>{{ lang.get_language_name().capitalize() }}</option>
+                {% endfor %}
+            </select>
+            {% endif %}
+        </div>
+
+        {% block auth_content %}
+        {% endblock %}
+
+    </div>
+{% endblock %}

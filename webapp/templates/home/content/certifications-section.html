@@ -1,0 +1,16 @@
+<div class="education-section px-3 px-lg-5">
+    <h2 class="h3 mb-4" data-i18n="certifications-title"></h2>
+    <div class="container-fluid">
+    <div class="row flex-row flex-nowrap horizontal-scroll no-gutters">
+        {% for n in get_number("crt", None, chk=False) %}
+                <div class="card card-block mx-2 crt-card no-gutters">
+                    <img class="card-img-top mx-auto crt-card-img" src="{{ i18n.get_data().get(n + '-crt-img') }}" data-i18n="[alt]{{ n + '-crt-alt' }}" />
+
+                    <div class="card-footer">
+                        <a href="{{ i18n.get_data().get(n + '-crt-link') }}" class="card-link" data-i18n="crt-chk-title"></a>
+                    </div>
+                </div>
+        {% endfor %}
+    </div>
+</div>
+    </div>

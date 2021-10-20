@@ -1,0 +1,14 @@
+{% extends "auth/common.html" %}
+
+{% block auth_content %}
+        <!-- AUTH -->
+        <h1 class="pt-1" data-i18n="auth-review-title"></h1>
+        <ol class="progress">
+          <li data-step="1" data-i18n="auth-code-requested" class="{{ get_status(1) }}"></li>
+          <li data-step="2" data-i18n="request-under-review" class="{{ get_status(2) }}"></li>
+          <li data-step="3" data-i18n="request-processing" class="{{ get_status(3) }}"></li>
+          <li data-step="4" data-i18n="request-accepted" class="progress__last get_status(4)"></li>
+        </ol>
+        <!--// AUTH -->
+        {% include 'common/bootstrap.html' %}
+{% endblock %}

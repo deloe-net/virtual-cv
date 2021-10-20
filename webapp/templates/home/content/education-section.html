@@ -1,0 +1,13 @@
+<div class="education-section px-3 px-lg-5 pb-5">
+    <h2 class="h3 mb-4" data-i18n="education-title"></h2>
+    <div class="timeline">
+        {% for n in get_number("edu", None, chk=False) %}
+        <div class="timeline-card timeline-card-success card shadow-sm">
+            <div class="card-body card-body-p">
+                <div class="mb-2"> <span class="h5" data-i18n="{{ n + '-edu-degree' }}"></span> <span class="text-muted h6" data-i18n="{{ n + '-edu-institute' }}"></span></div>
+                <div class="text-muted text-small mb-3" data-i18n="{{ n + '-edu-date' }}"></div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>

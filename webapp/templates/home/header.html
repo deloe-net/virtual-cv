@@ -1,0 +1,29 @@
+        <header class="d-print-none">
+            <div class="container text-center text-lg-left">
+                <div class="py-3 clearfix">
+                {% if len(available_languages) > 1 %}
+                    <select class="selectpicker" data-width="fit" id="lang-selector">
+                    {% for lang in available_languages %}
+                    <option value="{{ lang.language }}"{% if lang.language == get_locale().language %} selected="{{ lang.language }}"{% endif %}>{{ lang.get_language_name().capitalize() }}</option>
+                    {% endfor %}
+                    </select>
+                {% endif %}
+
+                    <div class="site-nav">
+                        <nav role="navigation">
+                            <ul class="nav justify-content-center">
+                            {% for cls, nav in [("fas", "info"), ("fas", "bug"), ("fab", "linkedin"), ("fab", "github"), ("fab", "jenkins")] %}
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ i18n.get_data()['url-' + nav] }}" data-i18n="[title]title-{{ nav }}">
+                                        <i class="{{ cls }} fa-{{ nav }}"></i>
+                                        <span class="menu-title sr-only" data-i18n="title-{{ nav }}"></span>
+                                    </a>
+                                </li>
+                            {% endfor %}
+
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </header>

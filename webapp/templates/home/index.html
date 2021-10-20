@@ -1,0 +1,23 @@
+{% extends "common/base.html" %}
+
+{% block scripts %}
+    {% include 'home/headers/styles.html' %}
+    {% include 'common/headers/bundle.html' %}
+
+{% endblock %}
+
+
+{% block body %}
+
+    <body id="top">
+    {% include 'home/header.html' %}
+
+    {% include 'home/content/content.html' %}
+
+    {% include 'home/footer.html' %}
+    {% include 'home/watson_assistant.html' %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.1/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+  </body>
+
+{% endblock %}

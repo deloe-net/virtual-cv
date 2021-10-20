@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="{{ get_locale().language }}" dir="ltr">
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+        <title data-i18n="webapp-title"></title>
+
+        {% include 'common/headers/analytics.html' %}
+        {% include 'common/headers/jquery.html' %}
+        {% include 'common/headers/jquery.i18n.html' %}
+
+        <!--scripts-->
+        {% block scripts %}{% endblock %}
+        <!--//scripts-->
+
+
+        <!--styles-->
+        {% block styles %}{% endblock %}
+        <!--//styles-->
+
+        <!--webfonts-->
+        {% include 'common/headers/webfonts.html' %}
+        {% block fonts %}{% endblock %}
+        <!--//webfonts-->
+
+        <meta name="robots" content= "noindex, nofollow">
+    </head>
+    <body>
+    {% block body %}{% endblock %}
+
+    {% include 'common/cookie_notice.html' %}
+    </body>
+</html>

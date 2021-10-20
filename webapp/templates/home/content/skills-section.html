@@ -1,0 +1,46 @@
+                    <div class="skills-section px-3 px-lg-5">
+                        <h2 class="h3 mb-4" data-i18n="skills-title"></h2>
+                        <div class="row">
+                            <div class="col-md-6">
+                            {% for n in get_number("skills", 1) %}
+                                <div class="mb-2">
+                                    <span data-i18n="{{ 'skill-' + n }}"></span>
+                                    <div class="progress my-2">
+                                        <div
+                                            class="progress-bar bg-primary"
+                                            role="progressbar"
+                                            data-aos="zoom-in-right"
+                                            data-aos-delay="{{ get_delay() }}"
+                                            data-aos-anchor=".skills-section"
+                                            style="width: {{ i18n.get_data().get('skill-' + n + '-p') }}%;"
+                                            aria-valuenow="{{ i18n.get_data().get('skill-' + n + '-p') }}"
+                                            aria-valuemin="0"
+                                            aria-valuemax="100"
+                                        ></div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                            </div>
+
+                            <div class="col-md-6">
+                            {% for n in get_number("skills", 0) %}
+                                <div class="mb-2">
+                                    <span data-i18n="{{ 'skill-' + n }}"></span>
+                                    <div class="progress my-2">
+                                        <div
+                                            class="progress-bar bg-success"
+                                            role="progressbar"
+                                            data-aos="zoom-in-right"
+                                            data-aos-delay="{{ get_delay() }}"
+                                            data-aos-anchor=".skills-section"
+                                            style="width: {{ i18n.get_data().get('skill-' + n + '-p') }}%;"
+                                            aria-valuenow="{{ i18n.get_data().get('skill-' + n + '-p') }}"
+                                            aria-valuemin="0"
+                                            aria-valuemax="100"
+                                        ></div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                            </div>
+                        </div>
+                    </div>

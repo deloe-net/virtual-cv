@@ -1,0 +1,28 @@
+
+    <div id="social-btn">
+      <a class="nav-link" href="#"><span data-i18n="no-code"></span></a>
+    </div>
+
+    <script type="application/x-javascript">
+        jQuery(document).ready(function (e) {
+            $(function(){
+                $('#social-btn').on('click', function (e) {
+                    $('#social-btn').html(`
+                    <div class="social-buttons">
+                    {% for provider in oauth.keys() %}
+                      <a href="" id="social-btn-{{ provider }}" class="social-buttons__button social-button social-button--{{ provider }}" aria-label="{{ provider }}">
+                            <i class="fab fa-{{ provider }}"></i>
+                      </a>
+                    {% endfor %}
+                    </div>`);
+
+                    {% for provider in oauth.keys() %}
+                    $('#social-btn-{{ provider }}').click(function() {
+                        window.location.href = '{{ url_for('api_v1.auth.oauth_redirect_url', name=provider) }}';
+                        return false;
+                    });
+                    {% endfor %}
+                });
+            });
+        });
+    </script>

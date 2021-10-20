@@ -1,0 +1,37 @@
+        <!-- AUTH -->
+        <h1 class="pt-1" data-i18n="auth-text"></h1>
+        <div class="login-form">
+            <div class="close"></div>
+            <div class="head-info">
+                <label class="lbl-1"> </label>
+                <label class="lbl-2"> </label>
+                <label class="lbl-3"> </label>
+            </div>
+            <div class="clear"></div>
+            <div id="form-head">
+                <div class="avtar">
+                    <img src="{{ url_for('static', filename='multimedia/images/avtar.png') }}" />
+                </div>
+            </div>
+
+            <form id="auth-form" name="auth-form" action="{{ url_for('api_v1.auth.verify') }}" method="POST" role="form">
+                <div class="form-group">
+                    <input name="code" id="code" type="text" class="text" data-i18n="[value]input-code" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = '{{ i18n.input_code }}';}" />
+                    <span id="error" class="help-block"></span>
+                </div>
+                {{ form.csrf_token }}
+                <input type="hidden" name="g-recaptcha-response" id="g-recaptcha-response">
+            </form>
+
+            <div class="request-code">
+                {% include 'auth/oauth/buttons.html' %}
+            </div>
+            <div class="signin">
+                <button class="btn btn-primary" type="submit" id="submit-form">
+                    <span data-i18n="submit"></span>
+                </button>
+            </div>
+
+        </div>
+        <!--// AUTH -->
+        {% include 'common/bootstrap.html' %}

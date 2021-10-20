@@ -1,0 +1,36 @@
+<div class="work-experience-section px-3 px-lg-5">
+    <div class="row">
+        <div class="col-md-6">
+            <h2 class="h3 mb-4" data-i18n="work-experience-title"></h2>
+            <div class="mb-2">
+
+                <div class="timeline">
+                    {% for n in get_number("wxp", None, chk=False) %}
+                    <div class="timeline-card timeline-card-primary card shadow-sm">
+                        <div class="card-body card-body-p">
+                            <div class="mb-2"> <span class="h5" data-i18n="{{ n + '-w-xp-comp' }}"></span> <span class="text-muted h6" data-i18n="{{ n + '-w-xp-role' }}"></span></div>
+                            <div class="text-muted text-small" data-i18n="{{ n + '-w-xp-date' }}"></div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <h2 class="h3 mb-4" data-i18n="volunteer-experience-title"></h2>
+            <div class="mb-2">
+
+                <div class="timeline">
+                    {% for n in get_number("vxp", None, chk=False) %}
+                    <div class="timeline-card timeline-card-primary card shadow-sm">
+                        <div class="card-body card-body-p">
+                            <div class="mb-2"> <span class="h5 mb-3" data-i18n="{{ n + '-v-xp-comp' }}"></span> <span class="text-muted h6 mb-3" data-i18n="{{ n + '-v-xp-role' }}"></span></div>
+                            <div class="text-muted text-small" data-i18n="{{ n + '-v-xp-date' }}"></div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
