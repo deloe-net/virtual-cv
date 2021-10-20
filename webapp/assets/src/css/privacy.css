@@ -1,0 +1,22 @@
+.header-txt {
+	text-align: center!important;
+	margin: 0 auto!important;
+}
+
+.body-content {
+	padding: 150px 0 100px 0!important;
+	max-width: 900px;
+	margin: 30px auto;
+}
+
+.title-color {
+	color:#3f4554;
+}
+
+.subtitle-color {
+	color: #474c52 !important;
+}
+
+.content-list {
+	margin-left: 10px;
+}
