@@ -1,0 +1,15 @@
+{
+	"webapp-title": "CV: Un paso m\u00e1s...",
+	"auth-text": "Un paso m\u00e1s...",
+	"input-code": "C\u00f3digo de acceso",
+	"submit": "Ingresar",
+	"no-code": "\u00bfNo tienes c\u00f3digo de acceso?",
+	"cookie-notice": "Este sitio utiliza cookies para brindar una mejor experiencia. Al continuar utilizandolo, aceptas nuestros terminos del servicio y politicas de privacidad.",
+	"oauth-github": "Accede con Github",
+	"oauth-linkedin": "Accede con Linkedin",
+	"auth-review": "Solicitud bajo revision",
+	"csrf_expired": "Token CSRF expirado. Recargando...",
+	"invalid-len": "Longitud del c\u00f3digo inv\u00e1lida.",
+	"missing-code": "Es necesario indicar un codigo",
+	"invalid-code": "C\u00f3digo inv\u00e1lido"
+}

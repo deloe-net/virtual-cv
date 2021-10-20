@@ -1,0 +1,18 @@
+{
+  "back_btn_title": "Volver a la p\u00e1gina de inicio",
+  "err_404_webapp_title": "P\u00e1gina no encontrada",
+  "err_404_short_text": "Uups! No se encontr\u00f3 la p\u00e1gina",
+  "err_404_full_text": "Lo sentimos, pero la p\u00e1gina que est\u00e1 buscando no existe, ha sido eliminada, a cambiado de nombre o no est\u00e1 disponible temporalmente",
+
+  "err_403_webapp_title": "",
+  "err_403_short_text": "",
+  "err_403_full_text": "",
+
+  "err_401_webapp_title": "No autorizado",
+  "err_401_short_text": "",
+  "err_401_full_text": "",
+
+  "err_400_webapp_title": "",
+  "err_400_short_text": "",
+  "err_400_full_text": ""
+}
