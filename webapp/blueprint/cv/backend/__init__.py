@@ -12,6 +12,6 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 from .api import bp_api_cv
+from .qr import qr
 
-
-__all__ = ['bp_api_cv']
+__all__ = ['bp_api_cv', 'qr']

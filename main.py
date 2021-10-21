@@ -18,6 +18,7 @@ from playhouse import db_url
 
 from webapp.assets import assets
 from webapp.blueprint import auth
+from webapp.blueprint import cv
 from webapp.locales import load_available_languages
 from webapp.settings import get_secret
 from webapp.settings import load_dir
@@ -39,7 +40,8 @@ def main():
     auth.backend.security.idp_d.update_secret_key(_jwt_pub)
     auth.backend.security.idp_d.update_algm(settings.auth.cipher_algorithm)
     assets.update_salt(get_secret('ASSETS_SALT', default=os.urandom(2048)))
-
+    cv.backend.qr.add_logo(os.path.join(core.static_folder,
+                                        'multimedia/images/avtar.png'))
     core.config.update(
         SERVER_NAME=settings.server.domain_name,
         WTF_CSRF_SECRET_KEY=os.urandom(2048),
