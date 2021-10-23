@@ -54,7 +54,7 @@ def main():
         # SESSION_COOKIE_SECURE=True,
         SESSION_COOKIE_PATH='/'
     )
-    core.run(debug=True)
+    core.run(debug=settings.server.debug_mode)
 
 
 if __name__ == '__main__':
