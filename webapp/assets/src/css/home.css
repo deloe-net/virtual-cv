@@ -39,8 +39,8 @@
     padding: .5rem 1.5rem;
 }
 .no-gutters {
-    padding-right: 0px;
-    padding-left: 0px;
+    padding-right: 0;
+    padding-left: 0;
     margin-bottom: 2.5em;
 }
 
@@ -56,7 +56,7 @@ body {
     background-color: #f5f7fa;
 }
 .card-body-p {
-    padding: 2rem 2rem;
+    padding: 2rem;
 }
 /* Buttons */
 /* Inputs */
