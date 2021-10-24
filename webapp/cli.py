@@ -29,29 +29,28 @@ class CustomHelper(HelpFormatter):
     def _format_action(self, action):
         parts = super(HelpFormatter, self)._format_action(action)
         if action.nargs == argparse.PARSER:
-            parts = "\n".join(parts.split("\n")[1:])
+            parts = '\n'.join(parts.split('\n')[1:])
         return parts
 
     def _format_action_invocation(self, action):
         if not action.option_strings:
-            (metavar,) = self._metavar_formatter(action, action.dest)(1)
-            return metavar
+            return self._metavar_formatter(action, action.dest)(1)
+
+        parts = []
+        if action.nargs == 0:
+            parts.extend(action.option_strings)
         else:
-            parts = []
-            if action.nargs == 0:
-                parts.extend(action.option_strings)
-            else:
-                default = action.dest.upper()
-                args_string = self._format_args(action, default)
-                for option_string in action.option_strings:
-                    parts.append("%s" % option_string)
-                parts[-1] += " %s" % args_string
-            return ", ".join(parts)
+            default = action.dest.upper()
+            args_string = self._format_args(action, default)
+            for option_string in action.option_strings:
+                parts.append('%s' % option_string)
+            parts[-1] += ' %s' % args_string
+        return ', '.join(parts)
 
 
 class CustomParser(argparse.ArgumentParser):
     def error(self, message):
-        sys.stderr.write("error: %s\n\n" % message)
+        sys.stderr.write('error: %s\n\n' % message)
         self.print_help()
         sys.exit(2)
 
@@ -60,7 +59,7 @@ class ParserReactor(Reactor):
     def __init__(self, *args, **kwargs):
         self.parser = CustomParser(*args, **kwargs)
         self.sub_parser = self.parser.add_subparsers(
-            dest="sub_parser", parser_class=CustomParser
+            dest='sub_parser', parser_class=CustomParser
         )
         self.reactors = {}
 
@@ -68,8 +67,8 @@ class ParserReactor(Reactor):
         self.reactors[reactor.name] = reactor
 
     def add_parser(self, *args, **kwargs):
-        if "formatter_class" not in kwargs:
-            kwargs["formatter_class"] = CustomHelper
+        if 'formatter_class' not in kwargs:
+            kwargs['formatter_class'] = CustomHelper
         return self.sub_parser.add_parser(*args, **kwargs)
 
     def process(self, args):
@@ -82,7 +81,7 @@ class ParserReactor(Reactor):
 
 
 cli_parser = ParserReactor(
-    formatter_class=CustomHelper, description="WebApp Command Line: ismael-cv"
+    formatter_class=CustomHelper, description='WebApp Command Line: ismael-cv'
 )
 
 
@@ -90,25 +89,25 @@ cli_parser = ParserReactor(
 ###############################################################################
 class AssetsCLI(Reactor):
     def __init__(self, parent):
-        self.name = "assets"
-        self.parser = parent.add_parser(self.name, help="Actions in Assets")
+        self.name = 'assets'
+        self.parser = parent.add_parser(self.name, help='Actions in Assets')
 
-        self.parser.add_argument("-s", "--secure", action="store_true")
+        self.parser.add_argument('-s', '--secure', action='store_true')
         self.parser.add_argument(
-            "-f", "--from-file", dest="filename", metavar=("filename",)
+            '-f', '--from-file', dest='filename', metavar=('filename',)
         )
-        self.parser.add_argument("--simulate", action="store_true")
+        self.parser.add_argument('--simulate', action='store_true')
 
     @staticmethod
     def secure(filename: str, simulate: bool = True):
         abspath = assets.get_abspath(filename)
         if not os.path.exists(abspath):
-            logger.error("file not found: %s", filename)
+            logger.error('file not found: %s', filename)
             exit(1)
         dst = assets.secure_filename(filename)
         if not simulate:
             shutil.move(assets.get_abspath(filename), assets.get_abspath(dst))
-        logger.info(f"rename: {filename}  ->  {dst}")
+        logger.info(f'rename: {filename}  ->  {dst}')
 
     def secure_by_list(self, file_list: str, **kwargs):
         with open(file_list) as fp:
@@ -117,7 +116,7 @@ class AssetsCLI(Reactor):
             self.secure(filename, **kwargs)
 
     def process(self, args):
-        assets.update_salt(get_secret("ASSETS_SALT"))
+        assets.update_salt(get_secret('ASSETS_SALT'))
         if args.secure:
             self.secure_by_list(args.filename, simulate=args.simulate)
         else:
@@ -125,7 +124,7 @@ class AssetsCLI(Reactor):
 
 
 def main():
-    load_dir("config.d/")
+    load_dir('config.d/')
     cli_parser.add_reactor(AssetsCLI(cli_parser))
     cli_parser.add_reactor(auth.backend.database.cli.DatabaseCLI(cli_parser))
     cli_parser.add_reactor(auth.backend.security.cli.CodeCLI(cli_parser))
@@ -134,5 +133,5 @@ def main():
     cli_parser.process(args)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()

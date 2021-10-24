@@ -134,8 +134,7 @@ class Secrets:
             return ast.literal_eval(string)
         elif data_type is not None:
             return data_type(string)
-        else:
-            return string
+        return string
 
     @staticmethod
     def _decode(value, unicode: bool = True) -> _type_string:

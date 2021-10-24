@@ -142,8 +142,7 @@ def api_token_needed(func):
             and g.get('token_decoded', None) is None
         ):
             return jsonify({'errors': {'token': ['err_missing_token']}})
-        else:
-            return func(*args, **kwargs)
+        return func(*args, **kwargs)
 
     return decorated_function
 
@@ -156,8 +155,7 @@ def unauthenticated_only(f):
             or g.get('token_decoded', None) is not None
         ):
             return
-        else:
-            return f(*args, **kwargs)
+        return f(*args, **kwargs)
 
     return decorated_function
 
