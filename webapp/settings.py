@@ -26,7 +26,7 @@ from .webapp import core
 
 DEFAULT_NULL_RANDOM = uuid.uuid4().hex
 _type_string = Union[bytes, str]
-_default_encoding = "utf-8"
+_default_encoding = 'utf-8'
 
 
 class SectionProxy:
@@ -70,11 +70,11 @@ class SectionProxy:
         :param section: section name to be redirected
         """
 
-        object.__setattr__(self, "_cp", parser)
-        object.__setattr__(self, "_section", section)
+        object.__setattr__(self, '_cp', parser)
+        object.__setattr__(self, '_section', section)
 
     def __repr__(self):
-        return f"<{self.__class__.__name__}: {self._section}>"
+        return f'<{self.__class__.__name__}: {self._section}>'
 
     def __setattr__(self, option: str, value: any) -> None:
         self._cp.set(self._section, option, value)
@@ -170,10 +170,10 @@ class Secrets:
         try:
             value = self._decode(value, **kwargs)
         except (TypeError, binasciiError) as e:
-            err_msg = "secret value of %s must be in base64" % name
+            err_msg = 'secret value of %s must be in base64' % name
             raise CriticalError(err_msg) from e
         except UnicodeDecodeError as e:
-            err_msg = "the secret value %s is in base64 format?" % name
+            err_msg = 'the secret value %s is in base64 format?' % name
             raise CriticalError(err_msg) from e
         else:
             return value
@@ -220,7 +220,7 @@ class Secrets:
         elif default != DEFAULT_NULL_RANDOM:
             value = default
         else:
-            raise CriticalError("secret value %s not found" % name)
+            raise CriticalError('secret value %s not found' % name)
 
         return self.converter(value, **kwargs)
 
@@ -265,7 +265,7 @@ class ParserProxy:
 
 
 _default_parser_proxy = ParserProxy
-_global_secrets = Secrets(os.environ.get("TOP_SECRET_PREFIX", "TS_"))
+_global_secrets = Secrets(os.environ.get('TOP_SECRET_PREFIX', 'TS_'))
 _global_config = ConfigParser(interpolation=ExtendedInterpolation())
 settings_pool = _default_parser_proxy(_global_config)
 
@@ -302,14 +302,14 @@ def load(filename: str) -> None:
         _global_config.read_file(fp)
 
 
-def load_dir(dir_path: str, ext=".cfg"):
+def load_dir(dir_path: str, ext='.cfg'):
     """
     Read and parse all files that contain the specified extension.
 
     :param dir_path: A string with the directory to check
     :param ext: Extension name, the default value is ".cfg"
     """
-    filenames = glob.glob(os.path.join(dir_path, "*" + ext))
+    filenames = glob.glob(os.path.join(dir_path, '*' + ext))
     _global_config.read(filenames)
 
 
@@ -318,4 +318,4 @@ def ctx_settings():
     return dict(settings=settings_pool)
 
 
-__all__ = [settings_pool, "get_secret"]
+__all__ = ['settings_pool', 'get_secret']
