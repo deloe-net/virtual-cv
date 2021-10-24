@@ -20,7 +20,7 @@ Virtual-CV uses a number of open source projects to work properly:
 - [Font-Awesome] -  The iconic SVG, font, and CSS toolkit!
 - [Bootstrap] - great UI boilerplate for modern web apps
 
-    [Python]: 'https://github.com/python/cpython'
+    [Python]: <https://github.com/python/cpython>
     [jQuery]: 'http://jquery.com'
     [Font-Awesome]: 'https://github.com/FortAwesome/Font-Awesome'
     [peewee]: 'https://github.com/coleifer/peewee'
