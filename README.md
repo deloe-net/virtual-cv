@@ -21,18 +21,18 @@ Virtual-CV uses a number of open source projects to work properly:
 - [Bootstrap] - great UI boilerplate for modern web apps
 
     [Python]: <https://github.com/python/cpython>
-    [jQuery]: 'http://jquery.com'
-    [Font-Awesome]: 'https://github.com/FortAwesome/Font-Awesome'
-    [peewee]: 'https://github.com/coleifer/peewee'
-    [Flask]: 'https://github.com/pallets/flask'
-    [requests-oauthlib]: 'https://github.com/requests/requests-oauthlib'
-    [Flask-WTF]: 'https://github.com/wtforms/flask-wtf'
-    [Flask-Babel]: 'https://github.com/python-babel/flask-babel'
-    [PyJWT]: 'https://github.com/jpadilla/pyjwt'
-    [humanfriendly]: 'https://github.com/xolox/python-humanfriendly'
-    [qrcode]: 'https://github.com/lincolnloop/python-qrcode'
-    [Bootstrap]: 'http://twitter.github.com/bootstrap/'
-    [node.js]: 'http://nodejs.org'
+    [jQuery]: <http://jquery.com>
+    [Font-Awesome]: <https://github.com/FortAwesome/Font-Awesome>
+    [peewee]: <https://github.com/coleifer/peewee>
+    [Flask]: <https://github.com/pallets/flask>
+    [requests-oauthlib]: <https://github.com/requests/requests-oauthlib>
+    [Flask-WTF]: <https://github.com/wtforms/flask-wtf>
+    [Flask-Babel]: <https://github.com/python-babel/flask-babel>
+    [PyJWT]: <https://github.com/jpadilla/pyjwt>
+    [humanfriendly]: <https://github.com/xolox/python-humanfriendly>
+    [qrcode]: <https://github.com/lincolnloop/python-qrcode>
+    [Bootstrap]: <http://twitter.github.com/bootstrap/>
+    [node.js]: <http://nodejs.org>
 
 ## License
 
