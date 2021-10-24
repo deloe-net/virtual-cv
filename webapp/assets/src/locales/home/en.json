@@ -1,0 +1,70 @@
+{
+    "webapp-title": "CV: Example Name",
+    "my-age": "23 years old",
+    "my-name": "Example name",
+    "contact-email": "contact@deloe.net",
+    "contact-address": "Lorem ipsu",
+    "contact-phone": "(+56) 9 5555 5555",
+    "contact-email-title": "Email",
+    "contact-phone-title": "Phone",
+    "contact-address-title": "Address",
+
+    "about-me-content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin non ipsum neque. Quisque rutrum nunc at lorem aliquet finibus. Donec nunc metus, viverra eu interdum et, aliquet vel magna. Nullam finibus finibus ante fermentum congue.",
+    "about-me-job": "Nullam finibus finibus ante fermentum congue.",
+
+    "url-info": "https://statuspage.io/",
+    "url-bug": "https://atlassian.net/jira",
+    "url-github": "https://github.com/",
+    "url-linkedin": "https://www.linkedin.com/",
+    "url-jenkins": "https://jenkins.org/",
+    "url-hire-me": "https://www.freelancer.com/",
+
+    "title-info": "Status of services",
+    "title-bug": "Report a problem",
+    "title-github": "Github",
+    "title-linkedin": "Linkedin",
+    "title-jenkins": "Jenkins",
+
+    "btn-download": "Download CV",
+    "btn-hire-me": "Hire me",
+    "cookie-notice": "This site uses cookies to provide a better experience. By continuing to use it, you agree to our terms of service and privacy policies.",
+    "title-about-me": "About me",
+    "title-my-age": "Age",
+
+    "skills-title": "Professionals Skills",
+    "skill-1": "HTML",
+    "skill-1-p": "90",
+    "skill-2": "CSS",
+    "skill-2-p": "87",
+    "skill-3": "Example",
+    "skill-3-p": "67",
+    "skill-4": "Example",
+    "skill-4-p": "90",
+    "skill-5": "Example",
+    "skill-5-p": "79",
+    "skill-6": "Example",
+    "skill-6-p": "40",
+
+    "certifications-title": "Licenses and certifications",
+    "crt-chk-title": "Get certified",
+    "crt-iss-title": "Issuer: ",
+
+    "1-crt-img": "https://cdn.example.com/mini-badge.png",
+    "1-crt-alt": "Sample certificate",
+    "1-crt-link": "https://awesomesite.net/example/validation/url",
+
+    "education-title": "Education",
+    "1-edu-institute": "at University",
+    "1-edu-degree": "Systems Engineering",
+    "1-edu-date": "2016 - 2019",
+
+    "volunteer-experience-title": "Volunteer Experience",
+    "1-v-xp-comp": "Awesome NGO",
+    "1-v-xp-role": "as Example Role",
+    "1-v-xp-date": "May, 2015  -  Present",
+
+    "work-experience-title": "Work Experience",
+    "1-w-xp-comp": "Awesome Company",
+    "1-w-xp-role": "como Fullstack Developer",
+    "1-w-xp-date": "Sep, 2021  -  Present"
+}

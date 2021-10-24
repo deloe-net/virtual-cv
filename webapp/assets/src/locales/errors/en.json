@@ -1,0 +1,18 @@
+{
+  "back_btn_title": "Back to homepage",
+  "err_404_webapp_title": "Not Found",
+  "err_404_short_text": "Oops! Page Not Be Found",
+  "err_404_full_text": "Sorry but the page you are looking for does not exist, have been removed. name changed or is temporarily unavailable",
+
+  "err_403_webapp_title": "Forbidden",
+  "err_403_short_text": "You don't have permission to access",
+  "err_403_full_text": "Sorry, but the page you are looking for requires special permissions.",
+
+  "err_401_webapp_title": "Unauthorized",
+  "err_401_short_text": "You don't have permission to access",
+  "err_401_full_text": "Sorry, but you are not allowed to view this page",
+
+  "err_400_webapp_title": "Bad request",
+  "err_400_short_text": "That's an error",
+  "err_400_full_text": "Your client has issued a malformed or illegal request"
+}

@@ -1,0 +1,15 @@
+{
+	"webapp-title": "CV: One more step...",
+	"auth-text": "One more step...",
+	"input-code": "Access code",
+	"submit": "Verify",
+	"no-code": "You do not have an access code?",
+	"cookie-notice": "This site uses cookies to provide a better experience. By continuing to use it, you agree to our terms of service and privacy policies.",
+	"oauth-github": "Access with Github",
+	"oauth-linkedin": "Access with Linkedin",
+	"auth-review": "Requests under review",
+	"csrf_expired": "CSRF token expired. Reloading...",
+	"invalid-len": "Invalid code length.",
+	"missing-code": "You must provide a code",
+	"invalid-code": "invalid code"
+}
