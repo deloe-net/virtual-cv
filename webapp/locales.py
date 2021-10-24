@@ -31,13 +31,13 @@ class Lang:
     _data: dict = None
 
     def __init__(self, data: dict):
-        object.__setattr__(self, "_data", data)
+        object.__setattr__(self, '_data', data)
 
     def __setattr__(self, option, value) -> None:
         self._data[option] = value
 
     def __getattr__(self, option: str) -> str:
-        option = option.replace("_", "-")
+        option = option.replace('_', '-')
         return self._data.get(option)
 
     def get_data(self) -> dict:
@@ -59,10 +59,10 @@ class Locales:
     def get_cache(self, filename: str):
         return self._cache[filename]
 
-    def get_lang(self, filename) -> "Lang":
+    def get_lang(self, filename) -> 'Lang':
         return self._lang_class(self.read(filename))
 
-    def set_cache(self, filename: str, value: "Lang") -> None:
+    def set_cache(self, filename: str, value: 'Lang') -> None:
         self._cache[filename] = value
 
     def validate_cache(self, filename):
@@ -74,7 +74,7 @@ class Locales:
             data = json.load(fp)
         return data
 
-    def load(self, filename) -> "Lang":
+    def load(self, filename) -> 'Lang':
         filename = self.get_abspath(filename)
         if self.validate_cache(filename):
             return self.get_cache(filename)
@@ -88,7 +88,7 @@ i18n = Locales(core.static_folder)
 
 
 def load_available_languages(code_list):
-    for code in code_list.split(","):
+    for code in code_list.split(','):
         languages.append(Locale(code))
 
 
@@ -104,7 +104,7 @@ def get_locale() -> Locale:
     # LOCALE: BY USER
     #################
     for src in source:
-        locale = src.get("locale", None)
+        locale = src.get('locale', None)
         if locale is None or locale not in a_lang:
             continue
         return Locale(locale)
@@ -113,5 +113,4 @@ def get_locale() -> Locale:
     ###################
     if request.accept_languages is None or len(request.accept_languages) == 0:
         return Locale(settings.locales.language)
-    else:
-        return Locale(request.accept_languages.best_match(a_lang))
+    return Locale(request.accept_languages.best_match(a_lang))

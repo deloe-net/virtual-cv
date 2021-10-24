@@ -26,8 +26,8 @@ hash_stack = {}
 
 class Assets:
     STATIC_FOLDER = core.static_folder
-    REGEX_REPLACE = re.compile("[^a-zA-Z]")
-    FILE_FORMATTER = "{basename}.{hashsum}{ext}"
+    REGEX_REPLACE = re.compile('[^a-zA-Z]')
+    FILE_FORMATTER = '{basename}.{hashsum}{ext}'
 
     def __init__(self, algm: str, salt: bytes = None):
         self.__salt = salt
@@ -59,11 +59,11 @@ class Assets:
         hashsum = hashlib.pbkdf2_hmac(self._algm, data, self.__salt, 1000)
         hashsum = base64.b64encode(hashsum)
         if isinstance(hashsum, bytes):
-            hashsum = hashsum.decode("utf8")
-        return self.regex_replace.sub("", hashsum)
+            hashsum = hashsum.decode('utf8')
+        return self.regex_replace.sub('', hashsum)
 
     def get_file_hash(self, filename: str):
-        return self.digest(bytes(filename, "utf-8"))
+        return self.digest(bytes(filename, 'utf-8'))
 
     def secure_filename(self, filename: str):
         if filename in self.__data:
@@ -79,14 +79,13 @@ class Assets:
         return os.path.join(dirname, filename)
 
 
-assets = Assets("sha256", salt=b"")
+assets = Assets('sha256', salt=b'')
 
 
 def sf(filename: str):
     if settings_pool.server.debug_mode:
         return filename
-    else:
-        return assets.secure_filename(filename)
+    return assets.secure_filename(filename)
 
 
 @core.context_processor

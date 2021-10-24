@@ -10,5 +10,4 @@ from webapp.settings import settings_pool
 def oauth_page():
     if settings_pool.auth.code_supply_method == 'oauth-auto':
         return redirect(url_for('frontend_home.home_page'))
-    else:
-        return render_template('auth/oauth.html')
+    return render_template('auth/oauth.html')
