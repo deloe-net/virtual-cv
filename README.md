@@ -8,7 +8,7 @@ Virtual-CV uses a number of open source projects to work properly:
 
 - [Python] -  The Python programming language
 - [peewee] - A small, expressive orm
-- [Flask] - Markdown parser done right. Fast and easy to extend.
+- [Flask] - The Python micro framework for building web applications.
 - [Flask-WTF] - Simple integration of Flask and WTForms
 - [Flask-Babel] -  i18n and l10n support for Flask based on Babel and pytz
 - [requests-oauthlib] - OAuthlib support for Python-Requests!
