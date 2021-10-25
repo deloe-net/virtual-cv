@@ -12,16 +12,12 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 import argparse
-import os.path
-import shutil
 import sys
 from argparse import RawDescriptionHelpFormatter as HelpFormatter
 
-from .assets import assets
+from .assets import AssetsCLI
 from .blueprint import auth
 from .common import Reactor
-from .logger import logger
-from .settings import get_secret
 from .settings import load_dir
 
 
@@ -83,44 +79,6 @@ class ParserReactor(Reactor):
 cli_parser = ParserReactor(
     formatter_class=CustomHelper, description='WebApp Command Line: ismael-cv'
 )
-
-
-# ASSETS
-###############################################################################
-class AssetsCLI(Reactor):
-    def __init__(self, parent):
-        self.name = 'assets'
-        self.parser = parent.add_parser(self.name, help='Actions in Assets')
-
-        self.parser.add_argument('-s', '--secure', action='store_true')
-        self.parser.add_argument(
-            '-f', '--from-file', dest='filename', metavar=('filename',)
-        )
-        self.parser.add_argument('--simulate', action='store_true')
-
-    @staticmethod
-    def secure(filename: str, simulate: bool = True):
-        abspath = assets.get_abspath(filename)
-        if not os.path.exists(abspath):
-            logger.error('file not found: %s', filename)
-            exit(1)
-        dst = assets.secure_filename(filename)
-        if not simulate:
-            shutil.move(assets.get_abspath(filename), assets.get_abspath(dst))
-        logger.info(f'rename: {filename}  ->  {dst}')
-
-    def secure_by_list(self, file_list: str, **kwargs):
-        with open(file_list) as fp:
-            data = fp.read().splitlines()
-        for filename in data:
-            self.secure(filename, **kwargs)
-
-    def process(self, args):
-        assets.update_salt(get_secret('ASSETS_SALT'))
-        if args.secure:
-            self.secure_by_list(args.filename, simulate=args.simulate)
-        else:
-            self.parser.print_help()
 
 
 def main():
