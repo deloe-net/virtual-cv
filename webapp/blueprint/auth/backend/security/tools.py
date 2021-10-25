@@ -137,10 +137,8 @@ def token_needed(token_type: str):
 def api_token_needed(func):
     @wraps(func)
     def decorated_function(*args, **kwargs):
-        if (
-            settings_pool.auth.auth_required == 1
-            and g.get('token_decoded', None) is None
-        ):
+        if (settings_pool.auth.auth_required == 1 and
+                g.get('token_decoded', None) is None):
             return jsonify({'errors': {'token': ['err_missing_token']}})
         return func(*args, **kwargs)
 
@@ -150,11 +148,9 @@ def api_token_needed(func):
 def unauthenticated_only(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        if (
-            settings_pool.auth.auth_required == 0
-            or g.get('token_decoded', None) is not None
-        ):
-            return
+        if (settings_pool.auth.auth_required == 0
+                or g.get('token_decoded', None) is not None):
+            return redirect(url_for('frontend_home.home_page'))
         return f(*args, **kwargs)
 
     return decorated_function
