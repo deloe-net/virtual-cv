@@ -17,11 +17,13 @@ Virtual-CV uses a number of open source projects to work properly:
 - [qrcode] -  Python QR Code image generator.
 - [node.js] - evented I/O for the backend
 - [jQuery] - duh
+- [jQuery.i18n] - jQuery based internationalization library
 - [Font-Awesome] -  The iconic SVG, font, and CSS toolkit!
 - [Bootstrap] - great UI boilerplate for modern web apps
 
     [Python]: <https://github.com/python/cpython>
     [jQuery]: <http://jquery.com>
+    [jQuery.i18n]: <https://github.com/wikimedia/jquery.i18n>
     [Font-Awesome]: <https://github.com/FortAwesome/Font-Awesome>
     [peewee]: <https://github.com/coleifer/peewee>
     [Flask]: <https://github.com/pallets/flask>
