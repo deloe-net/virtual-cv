@@ -29,13 +29,12 @@ def add_headers(response):
       the same site
     """
 
-    response.headers["X-Frame-Options"] = "SAMEORIGIN"
-    response.headers["X-XSS-Protection"] = "1; mode=block"
+    response.headers['X-Frame-Options'] = 'SAMEORIGIN'
+    response.headers['X-XSS-Protection'] = '1; mode=block'
 
     return response
 
 
 @core.context_processor
 def built_in():
-    return dict(len=len,
-                G_ANALYTICS_ID=get_secret("G_ANALYTICS_ID", no_b64=True))
+    return dict(len=len, G_ANALYTICS_ID=get_secret('G_ANALYTICS_ID'))

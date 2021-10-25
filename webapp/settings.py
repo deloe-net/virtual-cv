@@ -11,6 +11,7 @@
 #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
+import abc
 import ast
 import base64
 import glob
@@ -20,6 +21,8 @@ from binascii import Error as binasciiError
 from configparser import ConfigParser
 from configparser import ExtendedInterpolation
 from typing import Union
+
+import hvac
 
 from .exceptions import CriticalError
 from .webapp import core
@@ -90,16 +93,35 @@ class SectionProxy:
 _default_section_proxy = SectionProxy
 
 
-class Secrets:
+class SecretEngine(abc.ABC):
+    @abc.abstractmethod
+    def get_value(self, *args, **kwargs):
+        pass
+
+
+class VaultEngine(SecretEngine):
+    def __init__(self, kv_map: dict, client: hvac.Client):
+        self.__kv_map = kv_map
+        self.__client = client
+
+    def get_value(self, key, **kwargs):
+        path = self.__kv_map.get(key)
+        if path is None:
+            return DEFAULT_NULL_RANDOM
+
+        res = self.__client.secrets.kv.read_secret_version(path=path['path'])
+        return res['data'][path['key']]
+
+
+class EnvironEngine(SecretEngine):
     """
     Object designed to handle secret data loaded in environment variables.
-    The contained values are required to be in base64 format.
 
     Attributes:
         prefix: prefix used by environment variables
     """
 
-    def __init__(self, prefix: str) -> None:
+    def __init__(self, prefix: str):
         """
         Initialize the object.
 
@@ -107,6 +129,29 @@ class Secrets:
         of the environment variables.
         """
         self.prefix: str = prefix
+
+    def get_value(self, key: str, pop: bool = False):
+        """
+        Read the environment variable and return its secret value. If the
+        environment variable is not found, default is returned if given,
+        otherwise CriticalError is raised.
+
+        :param key: environment variable name.
+        :param pop: remove the specific environment variable and return the
+        corresponding value
+        :return: The result in a string or bytes object.
+        """
+        name = self.prefix + key
+        if pop:
+            value = os.environ.pop(name, DEFAULT_NULL_RANDOM)
+        else:
+            value = os.environ.get(name, DEFAULT_NULL_RANDOM)
+        return value
+
+
+class Secrets:
+    def __init__(self, engine: SecretEngine = None) -> None:
+        self.engine = engine
 
     @staticmethod
     def converter(string: str,
@@ -137,91 +182,69 @@ class Secrets:
         return string
 
     @staticmethod
-    def _decode(value, unicode: bool = True) -> _type_string:
-        """
-        Decode the Base64 encoded bytes-like object or ASCII string.
-
-        :param value: str or bytes object encoded in base64 format
-        :param unicode: Converts a string from bytes to unicode.
-        :return: The result in a string or bytes object.
-        """
-
-        value = base64.b64decode(value)
-        if isinstance(value, bytes) and unicode:
+    def to_unicode(value):
+        if isinstance(value, bytes):
             value = value.decode(_default_encoding)
         return value
 
-    def decode(self, name: str, value: any, **kwargs) -> _type_string:
+    @staticmethod
+    def b64decode(name: str, value: any) -> _type_string:
         """
         Decode the Base64 encoded bytes-like object or ASCII string.
 
         :param name: environment variable name
         :param value: str or bytes object encoded in base64 format
-        :param kwargs: See below
-
-        :Keyword Arguments:
-            unicode: Converts a string from bytes to unicode.
 
         :return: The result in a string or bytes object.
         :raises CriticalError: When some problem occurs during decoding
         """
 
         try:
-            value = self._decode(value, **kwargs)
+            value = base64.b64decode(value)
         except (TypeError, binasciiError) as e:
             err_msg = 'secret value of %s must be in base64' % name
             raise CriticalError(err_msg) from e
-        except UnicodeDecodeError as e:
-            err_msg = 'the secret value %s is in base64 format?' % name
-            raise CriticalError(err_msg) from e
-        else:
-            return value
+        return value
 
-    def get_value(
-        self,
-        name: str,
-        no_b64: bool = False,
-        default: any = DEFAULT_NULL_RANDOM,
-        unicode: bool = True,
-        pop: bool = False,
-        **kwargs,
-    ) -> _type_string:
+    def get_value(self,
+                  key: str,
+                  default: any = DEFAULT_NULL_RANDOM,
+                  b64decode: bool = False,
+                  unicode: bool = True,
+                  data_type: type = None,
+                  to_python: bool = False,
+                  **kwargs) -> _type_string:
         """
-        Read the environment variable and return its secret value. If the
+        Read the variable from the engine and return its secret value. If the
         environment variable is not found, default is returned if given,
         otherwise CriticalError is raised.
 
-        :param name: environment variable name.
-        :param no_b64: Prevents base64 decoding from value. If this option is
-        used the parameters unicode and pop will be ignored.
-        :param default: Default value to return if the environment variable
-        is not found.
+        :param key: variable name.
+        :param default: Default value to return if the variable is not found.
+        :param b64decode: Indicates that the result value must be decoded.
         :param unicode: Converts a string from bytes to unicode.
-        :param pop: remove the specific environment variable and return the
-        corresponding value
-        :param kwargs: See below.
-            * data_type: datatype to be converted the result. Eg.: int, etc.
-            * to_python: Boolean value indicating that the result should be
-                tried to convert dynamically.
+        :param data_type: datatype to be converted the result. Eg.: int, etc.
+        :param to_python: Boolean value indicating that the result should be
+               evaluated as literal.
+        :param kwargs: Keyword argument parameters are passed to the engine
+               in use. For more information on the available parameters, see
+               the help of the engine in use.
+
         :return: The result in a string or bytes object.
-        :raises CriticalError: When some problem occurs during decoding.
         """
+        if self.engine is None:
+            raise CriticalError('No secret engine was provided.')
 
-        name = self.prefix + name
-        if name in os.environ:
-            if pop:
-                value = os.environ.pop(name)
-            else:
-                value = os.environ.get(name)
-
-            if not no_b64:
-                value = self.decode(name, value, unicode=unicode)
-        elif default != DEFAULT_NULL_RANDOM:
-            value = default
-        else:
-            raise CriticalError('secret value %s not found' % name)
-
-        return self.converter(value, **kwargs)
+        value = self.engine.get_value(key, **kwargs)
+        if value == DEFAULT_NULL_RANDOM:
+            if default != DEFAULT_NULL_RANDOM:
+                return default
+            raise CriticalError('not found: %s' % key)
+        if b64decode:
+            value = self.b64decode(key, value)
+        if unicode:
+            value = self.to_unicode(value)
+        return self.converter(value, data_type=data_type, to_python=to_python)
 
 
 class ParserProxy:
@@ -264,9 +287,13 @@ class ParserProxy:
 
 
 _default_parser_proxy = ParserProxy
-_global_secrets = Secrets(os.environ.get('TOP_SECRET_PREFIX', 'TS_'))
+_global_secrets = Secrets()
 _global_config = ConfigParser(interpolation=ExtendedInterpolation())
 settings_pool = _default_parser_proxy(_global_config)
+
+
+def set_secret_engine(engine: SecretEngine):
+    _global_secrets.engine = engine
 
 
 def get_secret(name: str, **kwargs):
@@ -317,4 +344,4 @@ def ctx_settings():
     return dict(settings=settings_pool)
 
 
-__all__ = ['settings_pool', 'get_secret']
+__all__ = ['settings_pool', 'get_secret', 'load_dir']
