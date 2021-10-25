@@ -1,4 +1,4 @@
-#  Copyright 2021 Ismael Lugo <ismaelrlg.dev@gmail.com>
+#  Copyright 2021 Ismael Lugo <ismael.lugo@deloe.net>
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -17,4 +17,4 @@ from . import csp
 from . import settings
 from .webapp import core
 
-__all__ = ["core", "csp", "callbacks", "settings", "blueprint"]
+__all__ = ['core', 'csp', 'callbacks', 'settings', 'blueprint']

@@ -1,4 +1,4 @@
-#  Copyright 2021 Ismael Lugo <ismaelrlg.dev@gmail.com>
+#  Copyright 2021 Ismael Lugo <ismael.lugo@deloe.net>
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -21,8 +21,8 @@ from .webapp import core
 
 
 class CSP:
-    policy_line = "%s %s;"
-    policy_ext = {"css": "style-src", "js": "script-src"}
+    policy_line = '%s %s;'
+    policy_ext = {'css': 'style-src', 'js': 'script-src'}
 
     def __init__(self):
         self.policies = {}
@@ -33,8 +33,8 @@ class CSP:
     def format(self):
         lines = []
         for policy, data in self.policies.items():
-            lines.append(self.policy_line % (policy, " ".join(data)))
-        return " ".join(lines)
+            lines.append(self.policy_line % (policy, ' '.join(data)))
+        return ' '.join(lines)
 
     def add_policy(self, name: str, value: str) -> None:
         if name in self.policies:
@@ -46,13 +46,13 @@ class CSP:
     def add_from_url(self, url: str, name: str = None) -> str:
         sch = urlparse(url)
         if name is None:
-            ext = splitext(sch.path)[1].lstrip(".")
+            ext = splitext(sch.path)[1].lstrip('.')
             if ext in self.policy_ext:
                 name = self.policy_ext[ext]
             else:
-                raise ValueError("unknown policy extension")
+                raise ValueError('unknown policy extension')
 
-        value = f"{sch.scheme}://{sch.netloc}"
+        value = f'{sch.scheme}://{sch.netloc}'
         self.add_policy(name, value)
         return url
 
@@ -70,9 +70,9 @@ class CSP:
 
 
 csp_policy = CSP()
-csp_policy.add_policy("script-src", "https://www.gstatic.com")
-csp_policy.add_policy("worker-src", "https://www.google.com")
-csp_policy.bulk_add("self", "unsafe-inline", "unsafe-eval", name="script-src")
+csp_policy.add_policy('script-src', 'https://www.gstatic.com')
+csp_policy.add_policy('worker-src', 'https://www.google.com')
+csp_policy.bulk_add('self', 'unsafe-inline', 'unsafe-eval', name='script-src')
 
 
 @core.context_processor
