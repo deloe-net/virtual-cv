@@ -222,7 +222,8 @@ class Secrets:
         :param key: variable name.
         :param default: Default value to return if the variable is not found.
         :param b64decode: Indicates that the result value must be decoded.
-        :param unicode: Converts a string from bytes to unicode.
+        :param unicode: Boolean value that indicates whether an object should
+                be converted from bytes to unicode. The default value is true.
         :param data_type: datatype to be converted the result. Eg.: int, etc.
         :param to_python: Boolean value indicating that the result should be
                evaluated as literal.
@@ -303,15 +304,8 @@ def get_secret(name: str, **kwargs):
     otherwise CriticalError is raised.
 
     :param name: environment variable name
-    :param kwargs: See below.
-        * default: Default value to return if the environment variable is not
-            found.
-        * unicode: Converts a string from bytes to unicode.
-        * pop: remove the specific environment variable and return the
-            corresponding value
-        * data_type: datatype to be converted the result. Eg.: int, etc.
-        * to_python: Boolean value indicating that the result should be
-            tried to convert dynamically.
+    :param kwargs: For more information, see the help of Secrets.get_value(..)
+
     :return: The result in a string or bytes object.
     :raises CriticalError: When some problem occurs during decoding.
     """
