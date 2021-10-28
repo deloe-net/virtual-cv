@@ -297,19 +297,19 @@ def set_secret_engine(engine: SecretEngine):
     _global_secrets.engine = engine
 
 
-def get_secret(name: str, **kwargs):
+def get_secret(key: str, **kwargs):
     """
     Read the environment variable and return its secret value.
     If the environment variable is not found, default is returned if given,
     otherwise CriticalError is raised.
 
-    :param name: environment variable name
+    :param key: environment variable name
     :param kwargs: For more information, see the help of Secrets.get_value(..)
 
     :return: The result in a string or bytes object.
     :raises CriticalError: When some problem occurs during decoding.
     """
-    return _global_secrets.get_value(name, **kwargs)
+    return _global_secrets.get_value(key, **kwargs)
 
 
 def load(filename: str) -> None:
