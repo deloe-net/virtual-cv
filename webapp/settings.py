@@ -344,4 +344,6 @@ def ctx_settings():
     return dict(settings=settings_pool)
 
 
-__all__ = ['settings_pool', 'get_secret', 'load_dir']
+__all__ = ['settings_pool', 'get_secret', 'load_dir', 'ParserProxy',
+           'SectionProxy', 'Secrets', 'SecretEngine', 'VaultEngine',
+           'EnvironEngine']
