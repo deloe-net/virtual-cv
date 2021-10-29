@@ -93,6 +93,45 @@ class SectionProxy:
 _default_section_proxy = SectionProxy
 
 
+class ParserProxy:
+    """
+    A proxy for a single section from a parser.
+
+    It provides a basic layer to extend the use of ConfigParser in which
+    it acts as a proxy, redirecting queries from the magic `__getattr__`
+    to an SectionProxy object.
+
+    This is an example of the usage:
+
+    >>> import configparser
+    >>> cfg = configparser.ConfigParser()
+    >>>
+    >>> sec = ParserProxy(cfg)
+    >>> sec.test_section
+    <SectionProxy: test_section>
+    >>>
+    """
+
+    _cp = None
+    _sections = None
+
+    def __init__(self, parser: ConfigParser) -> None:
+        """
+        Initialize the object.
+
+        :param parser: a ConfigParser object
+        """
+        self._cp = parser
+        self._sections = {}
+
+    def __getattr__(self, section: str) -> _default_section_proxy:
+        if section in self._sections:
+            return self._sections[section]
+
+        self._sections[section] = _default_section_proxy(self._cp, section)
+        return self._sections[section]
+
+
 class SecretEngine(abc.ABC):
     @abc.abstractmethod
     def get_value(self, *args, **kwargs):
@@ -104,13 +143,16 @@ class VaultEngine(SecretEngine):
         self.__kv_map = kv_map
         self.__client = client
 
-    def get_value(self, key, **kwargs):
-        path = self.__kv_map.get(key)
-        if path is None:
+    def get_value(self, key):
+        kv = self.__kv_map.get(key)
+        if kv is None:
             return DEFAULT_NULL_RANDOM
 
-        res = self.__client.secrets.kv.read_secret_version(path=path['path'])
-        return res['data'][path['key']]
+        res = self.__client.secrets.kv.read_secret_version(path=kv['path'])
+        if 'data' in res:
+            return res['data'].get(kv['key'], DEFAULT_NULL_RANDOM)
+        else:
+            return DEFAULT_NULL_RANDOM
 
 
 class EnvironEngine(SecretEngine):
@@ -210,7 +252,7 @@ class Secrets:
                   key: str,
                   default: any = DEFAULT_NULL_RANDOM,
                   b64decode: bool = False,
-                  unicode: bool = True,
+                  unicode: bool = False,
                   data_type: type = None,
                   to_python: bool = False,
                   **kwargs) -> _type_string:
@@ -223,7 +265,7 @@ class Secrets:
         :param default: Default value to return if the variable is not found.
         :param b64decode: Indicates that the result value must be decoded.
         :param unicode: Boolean value that indicates whether an object should
-                be converted from bytes to unicode. The default value is true.
+                be converted from bytes to unicode. The default value is False
         :param data_type: datatype to be converted the result. Eg.: int, etc.
         :param to_python: Boolean value indicating that the result should be
                evaluated as literal.
@@ -245,46 +287,11 @@ class Secrets:
             value = self.b64decode(key, value)
         if unicode:
             value = self.to_unicode(value)
-        return self.converter(value, data_type=data_type, to_python=to_python)
-
-
-class ParserProxy:
-    """
-    A proxy for a single section from a parser.
-
-    It provides a basic layer to extend the use of ConfigParser in which
-    it acts as a proxy, redirecting queries from the magic `__getattr__`
-    to an SectionProxy object.
-
-    This is an example of the usage:
-
-    >>> import configparser
-    >>> cfg = configparser.ConfigParser()
-    >>>
-    >>> sec = ParserProxy(cfg)
-    >>> sec.test_section
-    <SectionProxy: test_section>
-    >>>
-    """
-
-    _cp = None
-    _sections = None
-
-    def __init__(self, parser: ConfigParser) -> None:
-        """
-        Initialize the object.
-
-        :param parser: a ConfigParser object
-        """
-        self._cp = parser
-        self._sections = {}
-
-    def __getattr__(self, section: str) -> _default_section_proxy:
-        if section in self._sections:
-            return self._sections[section]
-
-        self._sections[section] = _default_section_proxy(self._cp, section)
-        return self._sections[section]
+        if data_type or to_python:
+            value = self.converter(value,
+                                   data_type=data_type,
+                                   to_python=to_python)
+        return value
 
 
 _default_parser_proxy = ParserProxy
