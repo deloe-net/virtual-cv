@@ -13,6 +13,7 @@ Virtual-CV uses a number of open source projects to work properly:
 - [Flask-Babel] -  i18n and l10n support for Flask based on Babel and pytz
 - [requests-oauthlib] - OAuthlib support for Python-Requests!
 - [PyJWT] -  JSON Web Token implementation in Python.
+- [hvac] - Python client for HashiCorp Vault
 - [humanfriendly] - Human friendly input/output for text interfaces using Python
 - [qrcode] -  Python QR Code image generator.
 - [node.js] - evented I/O for the backend
@@ -31,6 +32,7 @@ Virtual-CV uses a number of open source projects to work properly:
     [Flask-WTF]: <https://github.com/wtforms/flask-wtf>
     [Flask-Babel]: <https://github.com/python-babel/flask-babel>
     [PyJWT]: <https://github.com/jpadilla/pyjwt>
+    [hvac]: <https://github.com/hvac/hvac>
     [humanfriendly]: <https://github.com/xolox/python-humanfriendly>
     [qrcode]: <https://github.com/lincolnloop/python-qrcode>
     [Bootstrap]: <http://twitter.github.com/bootstrap/>
