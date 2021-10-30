@@ -1,4 +1,4 @@
-#  Copyright 2021 Ismael Lugo <ismaelrlg.dev@gmail.com>
+#  Copyright 2021 Ismael Lugo <ismael.lugo@deloe.net>
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -16,11 +16,11 @@ from flask_babel import Babel
 from flask_wtf.csrf import CSRFProtect
 
 
-core = Flask(__name__, static_folder="assets/dist")
+core = Flask(__name__, static_folder='assets/dist')
 
 babel = Babel()
 babel.init_app(core)
 
 csrf = CSRFProtect()
 csrf.init_app(core)
-core.config.update(SERVER_NAME="ismael-cv.deloe.net")
+core.config.update(SERVER_NAME='ismael-cv.deloe.net')

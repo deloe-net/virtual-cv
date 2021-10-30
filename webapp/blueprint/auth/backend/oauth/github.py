@@ -1,4 +1,4 @@
-#  Copyright 2021 Ismael Lugo <ismaelrlg.dev@gmail.com>
+#  Copyright 2021 Ismael Lugo <ismael.lugo@deloe.net>
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -29,8 +29,8 @@ PROVIDER = 'github'
 
 def client_secrets():
     class ClientSecrets:
-        client_id = get_secret('GITHUB_CID', data_type=str)
-        client_secret = get_secret('GITHUB_CST', data_type=str)
+        client_id = get_secret('GITHUB_CID')
+        client_secret = get_secret('GITHUB_CST')
         uri_auth = 'https://github.com/login/oauth/authorize'
         uri_token = 'https://github.com/login/oauth/access_token'
 

@@ -1,4 +1,4 @@
-#  Copyright 2021 Ismael Lugo <ismaelrlg.dev@gmail.com>
+#  Copyright 2021 Ismael Lugo <ismael.lugo@deloe.net>
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -31,8 +31,8 @@ PROVIDER = 'linkedin'
 
 def client_secrets():
     class ClientSecrets:
-        client_id = get_secret('LINKEDIN_CID', data_type=str)
-        client_secret = get_secret('LINKEDIN_CST', data_type=str)
+        client_id = get_secret('LINKEDIN_CID')
+        client_secret = get_secret('LINKEDIN_CST')
         uri_redirect = url_for(
             'api_v1.auth.oauth_callback_url', name=PROVIDER, _external=True
         )

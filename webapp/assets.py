@@ -1,4 +1,4 @@
-#  Copyright 2021 Ismael Lugo <ismaelrlg.dev@gmail.com>
+#  Copyright 2021 Ismael Lugo <ismael.lugo@deloe.net>
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -15,10 +15,15 @@ import base64
 import hashlib
 import os
 import re
+import shutil
 import typing
 
+from .common import Reactor
+from .logger import logger
+from .settings import get_secret
 from .settings import settings_pool
 from .webapp import core
+
 
 cfg = settings_pool.security
 hash_stack = {}
@@ -80,6 +85,44 @@ class Assets:
 
 
 assets = Assets('sha256', salt=b'')
+
+
+# ASSETS CLI
+###############################################################################
+class AssetsCLI(Reactor):
+    def __init__(self, parent):
+        self.name = 'assets'
+        self.parser = parent.add_parser(self.name, help='Actions in Assets')
+
+        self.parser.add_argument('-s', '--secure', action='store_true')
+        self.parser.add_argument(
+            '-f', '--from-file', dest='filename', metavar=('filename',)
+        )
+        self.parser.add_argument('--simulate', action='store_true')
+
+    @staticmethod
+    def secure(filename: str, simulate: bool = True):
+        abspath = assets.get_abspath(filename)
+        if not os.path.exists(abspath):
+            logger.error('file not found: %s', filename)
+            exit(1)
+        dst = assets.secure_filename(filename)
+        if not simulate:
+            shutil.move(assets.get_abspath(filename), assets.get_abspath(dst))
+        logger.info(f'rename: {filename}  ->  {dst}')
+
+    def secure_by_list(self, file_list: str, **kwargs):
+        with open(file_list) as fp:
+            data = fp.read().splitlines()
+        for filename in data:
+            self.secure(filename, **kwargs)
+
+    def process(self, args):
+        assets.update_salt(get_secret('ASSETS_SALT'))
+        if args.secure:
+            self.secure_by_list(args.filename, simulate=args.simulate)
+        else:
+            self.parser.print_help()
 
 
 def sf(filename: str):

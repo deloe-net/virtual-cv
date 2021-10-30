@@ -1,4 +1,4 @@
-#  Copyright 2021 Ismael Lugo <ismaelrlg.dev@gmail.com>
+#  Copyright 2021 Ismael Lugo <ismael.lugo@deloe.net>
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -53,7 +53,7 @@ class CodeCLI(Reactor):
 
     @staticmethod
     def init_db():
-        database_url = get_secret('AUTH_DATABASE_URL', unicode=True)
+        database_url = get_secret('AUTH_DATABASE_URL')
         database_proxy.initialize(db_url.connect(database_url))
 
     @staticmethod
