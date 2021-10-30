@@ -43,23 +43,26 @@ class SectionProxy:
     As an additional feature when obtaining a value, it will try to convert
     safely to Python code.
 
-    This is an example of the usage:
+    :param parser: a ConfigParser object
+    :param section: section name to be redirected
 
-    >>> import configparser
-    >>> cfg = configparser.ConfigParser()
-    >>> cfg.add_section("test_section")
-    >>> cfg.set("test_section", "test_option", "1")
-    >>> # A query would typically be done with classical methods.
-    >>> cfg.get("test_section", "test_option")
-    '1'
-    >>> # But it can be improved...
-    >>> sec = SectionProxy(cfg, 'test_section')
-    >>> sec.test_option
-    1
-    >>> sec.other_option = "test"
-    >>> sec.other_option
-    'test'
-    >>>
+    Example usage::
+
+        >>> import configparser
+        >>> cfg = configparser.ConfigParser()
+        >>> cfg.add_section("test_section")
+        >>> cfg.set("test_section", "test_option", "1")
+        >>> # A query would typically be done with classical methods.
+        >>> cfg.get("test_section", "test_option")
+        '1'
+        >>> # But it can be improved...
+        >>> sec = SectionProxy(cfg, 'test_section')
+        >>> sec.test_option
+        1
+        >>> sec.other_option = "test"
+        >>> sec.other_option
+        'test'
+        >>>
     """
 
     _section: str = None
@@ -68,9 +71,6 @@ class SectionProxy:
     def __init__(self, parser: ConfigParser, section: str) -> None:
         """
         Initialize the object.
-
-        :param parser: a ConfigParser object
-        :param section: section name to be redirected
         """
 
         object.__setattr__(self, '_cp', parser)
@@ -101,15 +101,15 @@ class ParserProxy:
     it acts as a proxy, redirecting queries from the magic `__getattr__`
     to an SectionProxy object.
 
-    This is an example of the usage:
+    Example usage::
 
-    >>> import configparser
-    >>> cfg = configparser.ConfigParser()
-    >>>
-    >>> sec = ParserProxy(cfg)
-    >>> sec.test_section
-    <SectionProxy: test_section>
-    >>>
+        >>> import configparser
+        >>> cfg = configparser.ConfigParser()
+        >>>
+        >>> sec = ParserProxy(cfg)
+        >>> sec.test_section
+        <SectionProxy: test_section>
+        >>>
     """
 
     _cp = None
@@ -133,17 +133,64 @@ class ParserProxy:
 
 
 class SecretEngine(abc.ABC):
+    """
+    Abstract class where secret engines come from.
+    """
+
     @abc.abstractmethod
     def get_value(self, *args, **kwargs):
         pass
 
 
 class VaultEngine(SecretEngine):
+    """
+    This is a secret engine that uses the hashicorp vault api.
+
+    To correctly instantiate this class, you must provide a key/value map
+    which should be governed by the following format::
+
+        >>> kv_map = {
+        ...     "VARIABLE-NAME": {"path": "vault-path", "key": "vault-key"}
+        ... }
+
+    :param kv_map: A ``dict`` object that contains the key/value map
+        required to search for secrets.
+    :param client: The hvac Client object for HashiCorp’s Vault.
+
+    Example usage::
+
+        >>> vault = hvac.Client(url='https://localhost:8200')
+        >>> engine = VaultEngine(kv_map, vault)
+    """
+
     def __init__(self, kv_map: dict, client: hvac.Client):
+        """
+        Initialize the object.
+        """
         self.__kv_map = kv_map
         self.__client = client
 
-    def get_value(self, key):
+    def get_value(self, key: str) -> str:
+        """
+        Return a secret according to the supplied key. If the value is not
+        found or an error occurs during its processing, it returns by default
+        ``DEFAULT_NULL_RANDOM``
+
+        :param key: A string with the key used to find the secret.
+        :return: The super secret value
+
+        Example usage::
+
+            >>> kv_map = {
+            ...     "VARIABLE-NAME": {"path": "vault-path", "key": "vault-key"}
+            ... }
+            >>> vault = hvac.Client(url='https://localhost:8200')
+            >>> engine = VaultEngine(kv_map, vault)
+            >>> engine.get_value('VARIABLE-NAME')
+            'super secret value'
+            >>> engine.get_value('UNDEFINED-VARIABLE')
+            '94273ec02822421e8bb9c7f7e2b12ad4'  # This is DEFAULT_NULL_RANDOM
+        """
         kv = self.__kv_map.get(key)
         if kv is None:
             return DEFAULT_NULL_RANDOM
@@ -157,7 +204,10 @@ class VaultEngine(SecretEngine):
 
 class EnvironEngine(SecretEngine):
     """
-    Object designed to handle secret data loaded in environment variables.
+    Manage secret data loaded in environment variables.
+
+    :param prefix: string that indicates the prefix by starting the names
+        of the environment variables.
 
     Attributes:
         prefix: prefix used by environment variables
@@ -166,9 +216,6 @@ class EnvironEngine(SecretEngine):
     def __init__(self, prefix: str):
         """
         Initialize the object.
-
-        :param prefix: string that indicates the prefix by starting the names
-        of the environment variables.
         """
         self.prefix: str = prefix
 
@@ -224,10 +271,16 @@ class Secrets:
         return string
 
     @staticmethod
-    def to_unicode(value):
-        if isinstance(value, bytes):
-            value = value.decode(_default_encoding)
-        return value
+    def to_unicode(text) -> str:
+        """
+        Convert a text (usually in bytes or ASCII) to unicode encoding.
+
+        :param text: A text object to be converted
+        :return: A str object in unicode
+        """
+        if isinstance(text, bytes):
+            text = text.decode(_default_encoding)
+        return text
 
     @staticmethod
     def b64decode(name: str, value: any) -> _type_string:
@@ -274,6 +327,8 @@ class Secrets:
                the help of the engine in use.
 
         :return: The result in a string or bytes object.
+        :raises CriticalError: When the secret is not found or the engine
+            has not been defined.
         """
         if self.engine is None:
             raise CriticalError('No secret engine was provided.')
