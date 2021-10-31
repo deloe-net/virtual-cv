@@ -9,7 +9,7 @@ repository = "https://github.com/deloe-net/ismael-cv"
 homepage = "https://github.com/deloe-net/ismael-cv"
 
 [tool.poetry.dependencies]
-python = "~3.8"
+python = "~3.9"
 Flask = "^2.0.2"
 Flask-WTF = "^0.15.1"
 Flask-Babel = "^2.0.0"
