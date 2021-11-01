@@ -8,11 +8,8 @@ jobs:
       - image: cimg/python:3.9.6
     steps:
       - checkout
-      - run:
-          name: Install python dependencies
-          command: |
-            pip install poetry
-            poetry install
+      - run: pip install poetry
+      - run: poetry install
       - run:
           name: Run tests and collect coverage
           command: |
