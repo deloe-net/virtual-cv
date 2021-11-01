@@ -2,19 +2,17 @@ version: 2.1
 orbs:
   codecov: codecov/codecov@3.2.0
 
-dep-install: &dep-install
-  name: Install python dependencies
-  command: |
-    pip install poetry
-    poetry install
-
 jobs:
   build:
     docker:
       - image: cimg/python:3.9.6
     steps:
       - checkout
-      - run: *dep-install
+      - run:
+          name: Install python dependencies
+          command: |
+            pip install poetry
+            poetry install
       - run:
           name: Run tests and collect coverage
           command: |
