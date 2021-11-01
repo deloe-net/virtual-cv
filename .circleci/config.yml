@@ -16,8 +16,8 @@ jobs:
       - run:
           name: Run tests and collect coverage
           command: |
-            coverage run -m pytest test/
-            coverage xml
+            python -m coverage run -m pytest test/
+            python -m coverage xml
       - codecov/upload
 
 workflow:
