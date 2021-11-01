@@ -8,13 +8,16 @@ jobs:
       - image: cimg/python:3.9.6
     steps:
       - checkout
-      - run: pip install poetry
-      - run: poetry install
+      - run:
+          name: Install python dependencies
+          command: |
+            pip install poetry
+            poetry install
       - run:
           name: Run tests and collect coverage
           command: |
-            python -m coverage run -m pytest test/
-            python -m coverage xml
+            poetry run coverage run -m pytest test/
+            poetry run coverage xml
       - codecov/upload
 
 workflow:
