@@ -18,7 +18,12 @@ from argparse import RawDescriptionHelpFormatter as HelpFormatter
 from .assets import AssetsCLI
 from .blueprint import auth
 from .common import Reactor
+from .exceptions import CriticalError
+from .settings import EnvironEngine
+from .settings import get_vault_engine
 from .settings import load_dir
+from .settings import set_secret_engine
+from .settings import settings_pool as settings
 
 
 class CustomHelper(HelpFormatter):
@@ -83,6 +88,14 @@ cli_parser = ParserReactor(
 
 def main():
     load_dir('config.d/')
+    if settings.secret.engine == 'environ':
+        engine = EnvironEngine(settings.environ.prefix)
+    elif settings.secret.engine == 'vault':
+        engine = get_vault_engine()
+    else:
+        raise CriticalError('Unknown engine')
+
+    set_secret_engine(engine)
     cli_parser.add_reactor(AssetsCLI(cli_parser))
     cli_parser.add_reactor(auth.backend.database.cli.DatabaseCLI(cli_parser))
     cli_parser.add_reactor(auth.backend.security.cli.CodeCLI(cli_parser))

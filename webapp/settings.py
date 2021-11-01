@@ -198,8 +198,7 @@ class VaultEngine(SecretEngine):
         res = self.__client.secrets.kv.read_secret_version(path=kv['path'])
         if 'data' in res:
             return res['data'].get(kv['key'], DEFAULT_NULL_RANDOM)
-        else:
-            return DEFAULT_NULL_RANDOM
+        return DEFAULT_NULL_RANDOM
 
 
 class EnvironEngine(SecretEngine):
@@ -232,10 +231,9 @@ class EnvironEngine(SecretEngine):
         """
         name = self.prefix + key
         if pop:
-            value = os.environ.pop(name, DEFAULT_NULL_RANDOM)
-        else:
-            value = os.environ.get(name, DEFAULT_NULL_RANDOM)
-        return value
+            return os.environ.pop(name, DEFAULT_NULL_RANDOM)
+
+        return os.environ.get(name, DEFAULT_NULL_RANDOM)
 
 
 class Secrets:
@@ -420,4 +418,4 @@ def ctx_settings():
 
 __all__ = ['settings_pool', 'get_secret', 'load_dir', 'ParserProxy',
            'SectionProxy', 'Secrets', 'SecretEngine', 'VaultEngine',
-           'EnvironEngine', 'get_vault_engine']
+           'EnvironEngine', 'get_vault_engine', 'set_secret_engine']

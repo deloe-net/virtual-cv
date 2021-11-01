@@ -35,7 +35,6 @@ def main():
     if settings.secret.engine == 'environ':
         engine = EnvironEngine(settings.environ.prefix)
     elif settings.secret.engine == 'vault':
-
         engine = get_vault_engine()
     else:
         raise CriticalError('Unknown engine')
