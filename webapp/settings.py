@@ -355,6 +355,24 @@ _global_config = ConfigParser(interpolation=ExtendedInterpolation())
 settings_pool = _default_parser_proxy(_global_config)
 
 
+def get_vault_engine():
+    client = hvac.Client(
+        url=os.environ.pop('VAULT_ADDR'),
+        token=os.environ.pop('VAULT_TOKEN'))
+
+    client.auth.approle.login(
+        role_id=os.environ.pop('VAULT_ROLE_ID'),
+        secret_id=client.sys.unwrap(
+            token=os.environ.pop('VAULT_WRAPPED_TOKEN')
+        )['data']['secret_id'],
+    )
+    kv_map = client.secrets.kv.read_secret_version(
+        path=os.environ.pop('VAULT_KV_MAP_PATH'))
+    kv_map = kv_map['data'].get(
+        os.environ.pop('VAULT_KV_MAP_KEY'))
+    return VaultEngine(kv_map, client)
+
+
 def set_secret_engine(engine: SecretEngine):
     _global_secrets.engine = engine
 
@@ -402,4 +420,4 @@ def ctx_settings():
 
 __all__ = ['settings_pool', 'get_secret', 'load_dir', 'ParserProxy',
            'SectionProxy', 'Secrets', 'SecretEngine', 'VaultEngine',
-           'EnvironEngine']
+           'EnvironEngine', 'get_vault_engine']

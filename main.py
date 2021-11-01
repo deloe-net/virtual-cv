@@ -13,7 +13,6 @@
 #  limitations under the License.
 import os
 
-import hvac
 from humanfriendly import parse_timespan
 from playhouse import db_url
 
@@ -24,10 +23,10 @@ from webapp.exceptions import CriticalError
 from webapp.locales import load_available_languages
 from webapp.settings import EnvironEngine
 from webapp.settings import get_secret
+from webapp.settings import get_vault_engine
 from webapp.settings import load_dir
 from webapp.settings import set_secret_engine
 from webapp.settings import settings_pool as settings
-from webapp.settings import VaultEngine
 from webapp.webapp import core
 
 
@@ -36,22 +35,7 @@ def main():
     if settings.secret.engine == 'environ':
         engine = EnvironEngine(settings.environ.prefix)
     elif settings.secret.engine == 'vault':
-        def get_vault_engine():
-            client = hvac.Client(
-                url=os.environ.pop('VAULT_ADDR'),
-                token=os.environ.pop('VAULT_TOKEN'))
 
-            client.auth.approle.login(
-                role_id=os.environ.pop('VAULT_ROLE_ID'),
-                secret_id=client.sys.unwrap(
-                    token=os.environ.pop('VAULT_WRAPPED_TOKEN')
-                )['data']['secret_id'],
-            )
-            kv_map = client.secrets.kv.read_secret_version(
-                path=os.environ.pop('VAULT_KV_MAP_PATH'))
-            kv_map = kv_map['data'].get(
-                os.environ.pop('VAULT_KV_MAP_KEY'))
-            return VaultEngine(kv_map, client)
         engine = get_vault_engine()
     else:
         raise CriticalError('Unknown engine')
