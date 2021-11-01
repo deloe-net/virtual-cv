@@ -154,3 +154,4 @@ config.d/*.key
 config.d/*.key.pub
 
 poetry.lock
+.cache_ggshield

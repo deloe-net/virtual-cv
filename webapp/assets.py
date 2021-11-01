@@ -99,6 +99,7 @@ class AssetsCLI(Reactor):
             '-f', '--from-file', dest='filename', metavar=('filename',)
         )
         self.parser.add_argument('--simulate', action='store_true')
+        self.parser.add_argument('--salt', metavar='TEXT', type=str)
 
     @staticmethod
     def secure(filename: str, simulate: bool = True):
@@ -118,7 +119,12 @@ class AssetsCLI(Reactor):
             self.secure(filename, **kwargs)
 
     def process(self, args):
-        assets.update_salt(get_secret('ASSETS_SALT'))
+        if args.salt:
+            salt = args.salt
+        else:
+            salt = get_secret('ASSETS_SALT')
+
+        assets.update_salt(salt)
         if args.secure:
             self.secure_by_list(args.filename, simulate=args.simulate)
         else:

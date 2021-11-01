@@ -1,5 +1,7 @@
 
 [![CodeFactor](https://www.codefactor.io/repository/github/deloe-net/virtual-cv/badge/master?s=8d3652d5e24f2972a78c6c2972bf63ea19834009)](https://www.codefactor.io/repository/github/deloe-net/virtual-cv/overview/master)
+[![CircleCI](https://circleci.com/gh/deloe-net/virtual-cv/tree/master.svg?style=svg)](https://circleci.com/gh/deloe-net/virtual-cv/tree/master)
+[![codecov](https://codecov.io/gh/deloe-net/virtual-cv/branch/master/graph/badge.svg?token=MPPIYJZZKU)](https://codecov.io/gh/deloe-net/virtual-cv)
 
 This is a simple web application designed to display a Virtual and interactive CV. It can be quite useful and if you want to attract the attention of recruiters with something different.
 
