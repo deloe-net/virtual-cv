@@ -96,7 +96,7 @@ class Locales:
         True
         >>>
     """
-    def __init__(self, static_folder: str, lang_class: None = Lang):
+    def __init__(self, static_folder: str, lang_class: Lang = None):
         self.source_path = static_folder
         self._cache = {}
         self._lang_class = lang_class or _default_lang_obj
@@ -119,7 +119,7 @@ class Locales:
         """
         return self._cache[filename]
 
-    def get_lang(self, filename) -> 'Lang':
+    def _load(self, filename) -> 'Lang':
         """
         Read and load a translation from a JSON file, and return it as a
         ``Lang`` object.
@@ -175,7 +175,7 @@ class Locales:
         if self.validate_cache(filename):
             return self.get_cache(filename)
 
-        lang = self.get_lang(filename)
+        lang = self._load(filename)
         self.set_cache(filename, lang)
         return lang
 
