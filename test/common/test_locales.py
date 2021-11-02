@@ -61,13 +61,13 @@ class TestLocales(unittest.TestCase):
         o = Locales(p, c)
         assert o._lang_class is c
 
-    def test_get_abspath(self):
+    @mock.patch('os.path.join', clear=True)
+    def test_get_abspath(self, join):
         p = '/test/absolute/path'
         n = 'relative/route'
         o = Locales(p)
-        r = o.get_abspath(n)
-        assert r == os.path.join(p, n)
-        assert os.path.isabs(r)
+        o.get_abspath(n)
+        join.assert_called_once_with(p, n)
 
     def test_cache(self):
         o = Locales('./')
@@ -92,11 +92,15 @@ class TestLocales(unittest.TestCase):
     @mock.patch('builtins.open',
                 new_callable=mock.mock_open,
                 read_data='{"mock-json": "some-value"}')
-    def test_read(self, mock_file):
+    @mock.patch('json.load', clear=True)
+    def test_read(self, json_load, mock_file):
         f = '/test/filename.json'
+        d = {'mock-json': 'some-value'}
+        json_load.return_value = d
         r = Locales.read(f)
+        json_load.assert_called()
         mock_file.assert_called_with(f)
-        self.assertDictEqual(r, {'mock-json': 'some-value'})
+        self.assertDictEqual(r, d)
 
     def test_load(self):
         v = 'unique-value-obj'
