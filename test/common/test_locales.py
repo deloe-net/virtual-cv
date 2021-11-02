@@ -65,17 +65,42 @@ class TestLocales(unittest.TestCase):
     def test_get_abspath(self, join):
         p = '/test/absolute/path'
         n = 'relative/route'
+        m = mock.MagicMock()
         o = Locales(p)
-        o.get_abspath(n)
+        join.return_value = m
+        r = o.get_abspath(n)
         join.assert_called_once_with(p, n)
+        assert r is m
 
-    def test_cache(self):
+    def test_get_cache(self):
+        f = '/test/filename.json'
+        t = mock.MagicMock()
         o = Locales('./')
-        k = 'test-key'
-        v = mock.MagicMock()
-        assert o.set_cache(k, v) is None
-        assert o.validate_cache(k)
-        assert o.get_cache(k) is v
+        o._cache = mock.MagicMock(spec=dict)
+        o._cache.__getitem__.return_value = t
+        assert o.get_cache(f) is t
+        o._cache.__getitem__.assert_called_once_with(f)
+
+    def test_get_cache_undefined(self):
+        f = '/test/filename.json'
+        o = Locales('./')
+        self.assertRaises(KeyError, o.get_cache, f)
+
+    def test_set_cache(self):
+        f = '/test/filename.json'
+        t = mock.MagicMock()
+        o = Locales('./')
+        o._cache = mock.MagicMock(spec=dict)
+        o.set_cache(f, t)
+        o._cache.__setitem__.assert_called_once_with(f, t)
+
+    def test_in_cache(self):
+        f = '/test/filename.json'
+        o = Locales('./')
+        o._cache = mock.MagicMock(spec=dict)
+        o._cache.__contains__.return_value = True
+        self.assertTrue(o.validate_cache(f))
+        o._cache.__contains__.assert_called_once_with(f)
 
     def test_pre_load(self):
         v = 'return-value'
