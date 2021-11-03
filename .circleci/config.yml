@@ -27,4 +27,4 @@ workflow:
   version: 2.1
   build-test:
     jobs:
-      - build
+      - test
