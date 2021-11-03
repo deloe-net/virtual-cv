@@ -18,6 +18,9 @@ jobs:
           command: |
             poetry run coverage run -m pytest test/
             poetry run coverage xml
+            poetry run pytest --junitxml=test-results/junit.xml
+      - store_test_results:
+          path: test-results
       - codecov/upload
 
 workflow:

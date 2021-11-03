@@ -98,7 +98,7 @@ class Locales:
     """
     def __init__(self, static_folder: str, lang_class: Lang = None):
         self.source_path = static_folder
-        self._cache = {}
+        self._cache: dict = {}
         self._lang_class = lang_class or _default_lang_obj
 
     def get_abspath(self, filename: str) -> str:
@@ -110,7 +110,7 @@ class Locales:
         """
         return os.path.join(self.source_path, filename)
 
-    def get_cache(self, filename: str):
+    def get_cache(self, filename: str) -> 'Lang':
         """
         Returns a ``Lang`` object from the cache (if exists).
 
