@@ -7,8 +7,13 @@ authors = ["Ismael Lugo <ismael.lugo@deloe.net>"]
 readme = 'README.md'
 repository = "https://github.com/deloe-net/virtual-cv"
 homepage = "https://github.com/deloe-net/virtual-cv"
-include = ["webapp/assets/", "main.py"]
-
+include = [
+    "main.py",
+    "config.d/*.cfg",
+    "webapp/assets/dist/*.js",
+    "webapp/assets/dist/locales/*.json",
+    "webapp/assets/dist/multimedia/*/*.*",
+]
 
 [tool.poetry.dependencies]
 python = "~3.9"
