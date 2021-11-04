@@ -420,4 +420,4 @@ def ctx_settings():
 
 __all__ = ['settings_pool', 'get_secret', 'load_dir', 'ParserProxy',
            'SectionProxy', 'Secrets', 'SecretEngine', 'VaultEngine',
-           'EnvironEngine', 'get_vault_engine']
+           'EnvironEngine', 'get_vault_engine', 'set_secret_engine']
