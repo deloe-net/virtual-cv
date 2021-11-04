@@ -30,7 +30,7 @@ from webapp.settings import settings_pool as settings
 from webapp.webapp import core
 
 
-def main():
+def main(start: bool = False):
     load_dir('config.d/')
     if settings.secret.engine == 'environ':
         engine = EnvironEngine(settings.environ.prefix)
@@ -62,13 +62,16 @@ def main():
         RECAPTCHA_PUBLIC_KEY=get_secret('RECAPTCHA_PUBLIC_KEY', no_b64=True),
         RECAPTCHA_PRIVATE_KEY=get_secret('RECAPTCHA_PRIVATE_KEY'),
         SESSION_COOKIE_DOMAIN=settings.server.domain_name,
-        # SESSION_COOKIE_HTTPONLY=True,
+        SESSION_COOKIE_HTTPONLY=True,
         SESSION_COOKIE_SAMESITE='Lax',
-        # SESSION_COOKIE_SECURE=True,
+        SESSION_COOKIE_SECURE=True,
         SESSION_COOKIE_PATH='/'
     )
-    core.run(debug=settings.server.debug_mode)
+    if start:
+        core.run(debug=settings.server.debug_mode)
+    else:
+        return core
 
 
 if __name__ == '__main__':
-    main()
+    main(start=True)
