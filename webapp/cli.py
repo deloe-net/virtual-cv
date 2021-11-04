@@ -59,6 +59,12 @@ class CustomParser(argparse.ArgumentParser):
 class ParserReactor(Reactor):
     def __init__(self, *args, **kwargs):
         self.parser = CustomParser(*args, **kwargs)
+        self.parser.add_argument(
+            '--secret-engine', '-se',
+            type=str,
+            choices=('vault', 'environ'),
+            dest='engine'
+        )
         self.sub_parser = self.parser.add_subparsers(
             dest='sub_parser', parser_class=CustomParser
         )
@@ -88,19 +94,21 @@ cli_parser = ParserReactor(
 
 def main():
     load_dir('config.d/')
-    if settings.secret.engine == 'environ':
-        engine = EnvironEngine(settings.environ.prefix)
-    elif settings.secret.engine == 'vault':
-        engine = get_vault_engine()
-    else:
-        raise CriticalError('Unknown engine')
 
-    set_secret_engine(engine)
     cli_parser.add_reactor(AssetsCLI(cli_parser))
     cli_parser.add_reactor(auth.backend.database.cli.DatabaseCLI(cli_parser))
     cli_parser.add_reactor(auth.backend.security.cli.CodeCLI(cli_parser))
     cli_parser.add_reactor(auth.backend.security.cli.TokenCLI(cli_parser))
     args = cli_parser.parser.parse_args()
+    secret_engine = args.engine or settings.secret.engine
+    if secret_engine == 'environ':
+        engine = EnvironEngine(settings.environ.prefix)
+    elif secret_engine == 'vault':
+        engine = get_vault_engine()
+    else:
+        raise CriticalError('Unknown engine')
+    set_secret_engine(engine)
+
     cli_parser.process(args)
 
 
