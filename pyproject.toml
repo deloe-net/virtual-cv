@@ -11,7 +11,7 @@ include = [
     "main.py",
     "config.d/*.cfg",
     "webapp/assets/dist/*.js",
-    "webapp/assets/dist/locales/*.json",
+    "webapp/assets/dist/locales/*/*.json",
     "webapp/assets/dist/multimedia/*/*.*",
 ]
 
