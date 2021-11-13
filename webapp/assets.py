@@ -16,9 +16,9 @@ import hashlib
 import os
 import re
 import shutil
+import sys
 
 from .common import Reactor
-from .logger import logger
 from .settings import get_secret
 from .settings import settings_pool
 from .webapp import core
@@ -155,7 +155,10 @@ class AssetsCLI(Reactor):
 
         self.parser.add_argument('-s', '--secure', action='store_true')
         self.parser.add_argument(
-            '-f', '--from-file', dest='filename', metavar=('filename',)
+            '-f', '--from-file',
+            dest='filename',
+            metavar=('filename',),
+            required=True
         )
         self.parser.add_argument('--simulate', action='store_true')
         self.parser.add_argument('--salt', metavar='TEXT', type=str)
@@ -164,12 +167,12 @@ class AssetsCLI(Reactor):
     def secure(filename: str, simulate: bool = True):
         abspath = assets.get_abspath(filename)
         if not os.path.exists(abspath):
-            logger.error('file not found: %s', filename)
+            print('file not found: %s', filename, file=sys.stderr)
             exit(1)
         dst = assets.secure_filename(filename)
         if not simulate:
             shutil.move(assets.get_abspath(filename), assets.get_abspath(dst))
-        logger.info(f'rename: {filename}  ->  {dst}')
+        print(f'rename: {filename}  ->  {dst}',  file=sys.stderr)
 
     def secure_by_list(self, file_list: str, **kwargs):
         with open(file_list) as fp:
