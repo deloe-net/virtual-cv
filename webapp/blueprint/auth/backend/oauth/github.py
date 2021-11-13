@@ -31,10 +31,11 @@ class OAuth(object):
     secrets = None
 
     class ClientSecrets:
-        client_id = get_secret('GITHUB_CID')
-        client_secret = get_secret('GITHUB_CST')
-        uri_auth = 'https://github.com/login/oauth/authorize'
-        uri_token = 'https://github.com/login/oauth/access_token'
+        def __init__(self):
+            self.client_id = get_secret('GITHUB_CID')
+            self.client_secret = get_secret('GITHUB_CST')
+            self.uri_auth = 'https://github.com/login/oauth/authorize'
+            self.uri_token = 'https://github.com/login/oauth/access_token'
 
     @classmethod
     def init_secrets(cls):

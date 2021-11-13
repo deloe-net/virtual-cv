@@ -33,14 +33,15 @@ class OAuth(object):
     secrets = None
 
     class ClientSecrets:
-        client_id = get_secret('LINKEDIN_CID')
-        client_secret = get_secret('LINKEDIN_CST')
-        uri_redirect = url_for(
-            'api_v1.auth.oauth_callback_url', name=PROVIDER, _external=True
-        )
-        uri_auth = 'https://www.linkedin.com/uas/oauth2/authorization'
-        uri_token = 'https://www.linkedin.com/uas/oauth2/accessToken'
-        scope = ['r_liteprofile', 'r_emailaddress']
+        def __init__(self):
+            self.client_id = get_secret('LINKEDIN_CID')
+            self.client_secret = get_secret('LINKEDIN_CST')
+            self.uri_redirect = url_for(
+                'api_v1.auth.oauth_callback_url', name=PROVIDER, _external=True
+            )
+            self.uri_auth = 'https://www.linkedin.com/uas/oauth2/authorization'
+            self.uri_token = 'https://www.linkedin.com/uas/oauth2/accessToken'
+            self.scope = ['r_liteprofile', 'r_emailaddress']
 
     @classmethod
     def init_secrets(cls):
