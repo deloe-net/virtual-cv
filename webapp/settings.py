@@ -263,9 +263,9 @@ class Secrets:
         """
 
         if to_python:
-            return ast.literal_eval(string)
+            string = ast.literal_eval(string)
         elif data_type is not None:
-            return data_type(string)
+            string = data_type(string)
         return string
 
     @staticmethod
