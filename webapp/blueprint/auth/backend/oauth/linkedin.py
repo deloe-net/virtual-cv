@@ -29,45 +29,49 @@ from webapp.settings import get_secret
 PROVIDER = 'linkedin'
 
 
-def client_secrets():
-    class ClientSecrets:
-        client_id = get_secret('LINKEDIN_CID')
-        client_secret = get_secret('LINKEDIN_CST')
-        uri_redirect = url_for(
-            'api_v1.auth.oauth_callback_url', name=PROVIDER, _external=True
-        )
-        uri_auth = 'https://www.linkedin.com/uas/oauth2/authorization'
-        uri_token = 'https://www.linkedin.com/uas/oauth2/accessToken'
-        scope = ['r_liteprofile', 'r_emailaddress']
+class OAuth(object):
+    secrets = None
 
-    return ClientSecrets()
+    class ClientSecrets:
+        def __init__(self):
+            self.client_id = get_secret('LINKEDIN_CID')
+            self.client_secret = get_secret('LINKEDIN_CST')
+            self.uri_redirect = url_for(
+                'api_v1.auth.oauth_callback_url', name=PROVIDER, _external=True
+            )
+            self.uri_auth = 'https://www.linkedin.com/uas/oauth2/authorization'
+            self.uri_token = 'https://www.linkedin.com/uas/oauth2/accessToken'
+            self.scope = ['r_liteprofile', 'r_emailaddress']
+
+    @classmethod
+    def init_secrets(cls):
+        cls.secrets = cls.ClientSecrets()
 
 
 @oauth_redirect(PROVIDER)
 def oauth_linkedin_redirect():
-    secrets = client_secrets()
     session = OAuth2Session(
-        secrets.client_id,
-        redirect_uri=secrets.uri_redirect,
-        scope=secrets.scope,
+        OAuth.secrets.client_id,
+        redirect_uri=OAuth.secrets.uri_redirect,
+        scope=OAuth.secrets.scope,
         state=csrf.generate_csrf,
     )
     session = linkedin_compliance_fix(session)
-    url_auth, state = session.authorization_url(secrets.uri_auth)
+    url_auth, state = session.authorization_url(OAuth.secrets.uri_auth)
     return redirect(url_auth)
 
 
 @oauth_callback(PROVIDER)
 def oauth_linkedin_callback():
-    secrets = client_secrets()
     try:
         csrf.validate_csrf(cookie.get('csrf_token'))
     except ValidationError:
         abort(400, 'Invalid CSRF token.')
 
-    session = OAuth2Session(secrets.client_id, state=cookie.get('csrf_token'))
+    session = OAuth2Session(OAuth.secrets.client_id,
+                            state=cookie.get('csrf_token'))
     session.fetch_token(
-        secrets.uri_token,
-        client_secret=secrets.client_secret,
+        OAuth.secrets.uri_token,
+        client_secret=OAuth.secrets.client_secret,
         authorization_response=request.url,
     )

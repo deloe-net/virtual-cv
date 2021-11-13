@@ -27,35 +27,39 @@ from webapp.settings import get_secret
 PROVIDER = 'github'
 
 
-def client_secrets():
-    class ClientSecrets:
-        client_id = get_secret('GITHUB_CID')
-        client_secret = get_secret('GITHUB_CST')
-        uri_auth = 'https://github.com/login/oauth/authorize'
-        uri_token = 'https://github.com/login/oauth/access_token'
+class OAuth(object):
+    secrets = None
 
-    return ClientSecrets()
+    class ClientSecrets:
+        def __init__(self):
+            self.client_id = get_secret('GITHUB_CID')
+            self.client_secret = get_secret('GITHUB_CST')
+            self.uri_auth = 'https://github.com/login/oauth/authorize'
+            self.uri_token = 'https://github.com/login/oauth/access_token'
+
+    @classmethod
+    def init_secrets(cls):
+        cls.secrets = cls.ClientSecrets()
 
 
 @oauth_redirect(PROVIDER)
 def oauth_github_redirect():
-    secrets = client_secrets()
-    session = OAuth2Session(secrets.client_id, state=csrf.generate_csrf)
-    url_auth, state = session.authorization_url(secrets.uri_auth)
+    session = OAuth2Session(OAuth.secrets.client_id, state=csrf.generate_csrf)
+    url_auth, state = session.authorization_url(OAuth.secrets.uri_auth)
     return redirect(url_auth)
 
 
 @oauth_callback(PROVIDER)
 def oauth_github_callback():
-    secrets = client_secrets()
     try:
         csrf.validate_csrf(cookie.get('csrf_token'))
     except ValidationError:
         abort(400, 'Invalid CSRF token.')
 
-    session = OAuth2Session(secrets.client_id, state=cookie.get('csrf_token'))
+    session = OAuth2Session(OAuth.secrets.client_id,
+                            state=cookie.get('csrf_token'))
     session.fetch_token(
-        secrets.uri_token,
-        client_secret=secrets.client_secret,
+        OAuth.secrets.uri_token,
+        client_secret=OAuth.secrets.client_secret,
         authorization_response=request.url,
     )

@@ -23,4 +23,3 @@ babel.init_app(core)
 
 csrf = CSRFProtect()
 csrf.init_app(core)
-core.config.update(SERVER_NAME='ismael-cv.deloe.net')

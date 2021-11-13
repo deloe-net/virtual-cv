@@ -263,9 +263,9 @@ class Secrets:
         """
 
         if to_python:
-            return ast.literal_eval(string)
+            string = ast.literal_eval(string)
         elif data_type is not None:
-            return data_type(string)
+            string = data_type(string)
         return string
 
     @staticmethod
@@ -360,14 +360,11 @@ def get_vault_engine():
 
     client.auth.approle.login(
         role_id=os.environ.pop('VAULT_ROLE_ID'),
-        secret_id=client.sys.unwrap(
-            token=os.environ.pop('VAULT_WRAPPED_TOKEN')
-        )['data']['secret_id'],
+        secret_id=client.sys.unwrap()['data']['secret_id'],
     )
     kv_map = client.secrets.kv.read_secret_version(
         path=os.environ.pop('VAULT_KV_MAP_PATH'))
-    kv_map = kv_map['data'].get(
-        os.environ.pop('VAULT_KV_MAP_KEY'))
+    kv_map = kv_map['data'].get(os.environ.pop('VAULT_KV_MAP_KEY'))
     return VaultEngine(kv_map, client)
 
 

@@ -35,6 +35,14 @@ def add_headers(response):
     return response
 
 
+class MainCTX:
+    data = None
+
+    @classmethod
+    def init(cls):
+        cls.data = dict(len=len, G_ANALYTICS_ID=get_secret('G_ANALYTICS_ID'))
+
+
 @core.context_processor
 def built_in():
-    return dict(len=len, G_ANALYTICS_ID=get_secret('G_ANALYTICS_ID'))
+    return MainCTX.data

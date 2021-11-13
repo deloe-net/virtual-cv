@@ -19,6 +19,7 @@ from playhouse import db_url
 from webapp.assets import assets
 from webapp.blueprint import auth
 from webapp.blueprint import cv
+from webapp.callbacks import MainCTX
 from webapp.exceptions import CriticalError
 from webapp.locales import load_available_languages
 from webapp.settings import EnvironEngine
@@ -41,16 +42,24 @@ def main(start: bool = False):
 
     set_secret_engine(engine)
     load_available_languages(settings.locales.available_languages)
-    auth.backend.database.database_proxy.initialize(
-        db_url.connect(get_secret('AUTH_DATABASE_URL', unicode=True)))
-    _jwt_key = get_secret('JWT_ENCODE_KEY')
-    _jwt_pub = get_secret('JWT_DECODE_KEY')
-    auth.backend.security.idp_e.update_secret_key(_jwt_key)
-    auth.backend.security.idp_e.update_algm(settings.auth.cipher_algorithm)
-    auth.backend.security.idp_e.update_ttl(
-        'access', parse_timespan(settings.auth.access_token_ttl))
-    auth.backend.security.idp_d.update_secret_key(_jwt_pub)
-    auth.backend.security.idp_d.update_algm(settings.auth.cipher_algorithm)
+
+    if settings.auth.auth_required == 1:
+        auth.backend.database.database_proxy.initialize(
+            db_url.connect(get_secret('AUTH_DATABASE_URL')))
+
+        auth.backend.security.idp_e.update_secret_key(
+            get_secret('JWT_ENCODE_KEY'))
+        auth.backend.security.idp_e.update_algm(settings.auth.cipher_algorithm)
+        auth.backend.security.idp_e.update_ttl(
+            'access', parse_timespan(settings.auth.access_token_ttl))
+        auth.backend.security.idp_d.update_secret_key(
+            get_secret('JWT_DECODE_KEY'))
+        auth.backend.security.idp_d.update_algm(settings.auth.cipher_algorithm)
+
+        auth.backend.oauth.github.OAuth.init_secrets()
+        auth.backend.oauth.linkedin.OAuth.init_secrets()
+
+    MainCTX.init()
     assets.update_salt(get_secret('ASSETS_SALT', default=os.urandom(2048)))
     cv.backend.qr.add_logo(os.path.join(core.static_folder,
                                         'multimedia/images/avtar.png'))
@@ -58,7 +67,7 @@ def main(start: bool = False):
         SERVER_NAME=settings.server.domain_name,
         WTF_CSRF_SECRET_KEY=os.urandom(2048),
         SECRET_KEY=os.urandom(2048),
-        RECAPTCHA_PUBLIC_KEY=get_secret('RECAPTCHA_PUBLIC_KEY', no_b64=True),
+        RECAPTCHA_PUBLIC_KEY=get_secret('RECAPTCHA_PUBLIC_KEY'),
         RECAPTCHA_PRIVATE_KEY=get_secret('RECAPTCHA_PRIVATE_KEY'),
         SESSION_COOKIE_DOMAIN=settings.server.domain_name,
         SESSION_COOKIE_HTTPONLY=True,
