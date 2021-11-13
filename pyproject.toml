@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "webapp"
-version = "2.1.1103"
+version = "2.1.1113"
 description = "Interactive virtual CV"
 license = "Apache"
 authors = ["Ismael Lugo <ismael.lugo@deloe.net>"]
