@@ -12,11 +12,11 @@
                     <div class="site-nav">
                         <nav role="navigation">
                             <ul class="nav justify-content-center">
-                            {% for cls, nav in [("fas", "info"), ("fas", "bug"), ("fab", "linkedin"), ("fab", "github"), ("fab", "jenkins")] %}
+                            {% for n in get_number("icon", 0, chk=False) %}
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ i18n.get_data()['url-' + nav] }}" data-i18n="[title]title-{{ nav }}">
-                                        <i class="{{ cls }} fa-{{ nav }}"></i>
-                                        <span class="menu-title sr-only" data-i18n="title-{{ nav }}"></span>
+                                    <a class="nav-link" href="{{ i18n[n + '-icon-url'] }}" data-i18n="[title]{{ n + '-icon-title' }}">
+                                        <i class="{{ i18n[n + '-icon-meta'] }}"></i>
+                                        <span class="menu-title sr-only" data-i18n="{{ n + '-icon-title' }}"></span>
                                     </a>
                                 </li>
                             {% endfor %}

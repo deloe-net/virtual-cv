@@ -63,6 +63,9 @@ class Lang:
         option = option.replace('_', '-')
         return self._data.get(option)
 
+    def __getitem__(self, item):
+        return self.get_data()[item]
+
     def get_data(self) -> dict:
         """
         Returns the dictionary with the translations.

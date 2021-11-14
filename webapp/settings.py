@@ -356,11 +356,11 @@ settings_pool = _default_parser_proxy(_global_config)
 def get_vault_engine():
     client = hvac.Client(
         url=os.environ.pop('VAULT_ADDR'),
-        token=os.environ.pop('VAULT_TOKEN'))
-
+        token=os.environ.pop('VAULT_APP_TOKEN'))
+    result = client.sys.unwrap()
     client.auth.approle.login(
         role_id=os.environ.pop('VAULT_ROLE_ID'),
-        secret_id=client.sys.unwrap()['data']['secret_id'],
+        secret_id=result['data']['secret_id'],
     )
     kv_map = client.secrets.kv.read_secret_version(
         path=os.environ.pop('VAULT_KV_MAP_PATH'))

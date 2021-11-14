@@ -19,6 +19,7 @@ from flask_babel import get_locale
 
 from webapp.assets import sf
 from webapp.blueprint.auth.backend.security.tools import access_token_needed
+from webapp.blueprint.auth.backend.security.tools import is_authenticated
 from webapp.locales import i18n
 
 bp_frontend_home = Blueprint('frontend_home', __name__, url_prefix='/')
@@ -29,12 +30,19 @@ regex = {
     'wxp': re.compile(r'^(?P<n>\d{1,2})-w-xp-comp$'),
     'vxp': re.compile(r'^(?P<n>\d{1,2})-v-xp-comp$'),
     'crt': re.compile(r'^(?P<n>\d{1,2})-crt-img$'),
+    'icon': re.compile(r'^(?P<n>\d{1,2})-icon-url$'),
 }
 
 
 @bp_frontend_home.context_processor
 def ctx_home():
-    i18n_data = i18n.load(sf('locales/home/%s.json' % get_locale().language))
+    if is_authenticated():
+        bp_name = 'home'
+    else:
+        bp_name = 'home-limited'
+
+    lang = get_locale().language
+    i18n_data = i18n.load(sf('locales/%s/%s.json' % (bp_name, lang)))
 
     def get_number(name, mod, chk=True):
         for key in i18n_data.get_data().keys():
@@ -60,7 +68,7 @@ def ctx_home():
         get_number=get_number,
         get_delay=AOSDelay().get_delay,
         i18n=i18n_data,
-        bp_name='home',
+        bp_name=bp_name,
     )
 
 

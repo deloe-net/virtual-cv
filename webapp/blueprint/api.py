@@ -26,16 +26,17 @@ def auto_api_json(response):
         try:
             data = json.loads(response.get_data())
         except json.decoder.JSONDecodeError:
-            return response
-        data['success'] = 'errors' not in data
-        response.data = json.dumps(data)
+            pass
+        else:
+            data['success'] = 'errors' not in data
+            response.data = json.dumps(data)
 
     return response
 
 
 @bp_api.errorhandler(CSRFError)
-def handle_csrf_error(e):
-    return {'errors': {'csrf': e.description}}
+def handle_csrf_error(e) -> dict:
+    return dict(errors={'csrf': e.description})
 
 
 __all__ = ['bp_api']
