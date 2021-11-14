@@ -46,21 +46,9 @@ class Assets:
         Initialize the object.
         """
 
-        self.__salt = salt
+        self._salt = salt
         self._algm = algm
-        self.__cache = {}
-
-    @property
-    def static_folder(self):
-        return self.STATIC_FOLDER
-
-    @property
-    def file_formatter(self):
-        return self.FILE_FORMATTER
-
-    @property
-    def regex_replace(self):
-        return self.REGEX_REPLACE
+        self._cache = {}
 
     def update_salt(self, salt: bytes) -> None:
         """
@@ -70,7 +58,7 @@ class Assets:
         """
         if isinstance(salt, str):
             salt = bytes(salt, 'utf-8')
-        self.__salt = salt
+        self._salt = salt
 
     def get_abspath(self, filename: str) -> str:
         """
@@ -79,9 +67,10 @@ class Assets:
         :param filename: Relative path of the file in the folder
         :return: Returns the absolute path of the file
         """
-        return os.path.join(self.static_folder, filename)
+        return os.path.join(self.STATIC_FOLDER, filename)
 
-    def format(self, **kwargs):
+    @classmethod
+    def format(cls, **kwargs):
         """
         Create safe filenames according to file format.
 
@@ -94,7 +83,7 @@ class Assets:
 
         :return: returns the end name of the secured file
         """
-        return self.file_formatter.format(**kwargs)
+        return cls.FILE_FORMATTER.format(**kwargs)
 
     def digest(self, data: bytes):
         """
@@ -103,11 +92,11 @@ class Assets:
         :param data: supplied data to generate the hash identifier
         :return: returns the generated hash identifier
         """
-        hashsum = hashlib.pbkdf2_hmac(self._algm, data, self.__salt, 1000)
-        hashsum = base64.b64encode(hashsum)
-        if isinstance(hashsum, bytes):
-            hashsum = hashsum.decode('utf8')
-        return self.regex_replace.sub('', hashsum)
+        hashsum = hashlib.pbkdf2_hmac(self._algm, data, self._salt, 1000)
+        file_id = base64.b64encode(hashsum)
+        if isinstance(file_id, bytes):
+            file_id = file_id.decode('utf8')
+        return self.REGEX_REPLACE.sub('', file_id)
 
     def get_file_hash(self, filename: str):
         """
@@ -130,16 +119,14 @@ class Assets:
         :return: returns the safe filename.
         """
 
-        if filename in self.__cache:
-            hashsum = self.__cache[filename]
+        if filename in self._cache:
+            hashsum = self._cache[filename]
         else:
-            hashsum = self.__cache[filename] = self.get_file_hash(filename)
+            hashsum = self._cache[filename] = self.get_file_hash(filename)
 
         dirname = os.path.dirname(filename)
-        fn_parts = os.path.splitext(os.path.basename(filename))
-        filename = self.format(basename=fn_parts[0],
-                               hashsum=hashsum,
-                               ext=fn_parts[1])
+        basename, ext = os.path.splitext(os.path.basename(filename))
+        filename = self.format(basename=basename, hashsum=hashsum, ext=ext)
         return os.path.join(dirname, filename)
 
 
