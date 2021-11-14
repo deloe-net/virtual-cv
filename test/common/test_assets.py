@@ -54,7 +54,7 @@ class TestAssets(unittest.TestCase):
     def test_get_abspath(self, join):
         a = Assets('md5')
         a.get_abspath('file.txt')
-        assert join.assert_called_once_with(a.STATIC_FOLDER, 'file.txt')
+        join.assert_called_once_with(a.STATIC_FOLDER, 'file.txt')
 
     def test_format(self):
         assert Assets.format(basename='a', hashsum='b', ext='.c') == 'a.b.c'
