@@ -43,7 +43,7 @@ def main(start: bool = False):
     set_secret_engine(engine)
     load_available_languages(settings.locales.available_languages)
 
-    if settings.auth.auth_required == 1:
+    if settings.auth.security_level >= 1:
         auth.backend.database.database_proxy.initialize(
             db_url.connect(get_secret('AUTH_DATABASE_URL')))
 

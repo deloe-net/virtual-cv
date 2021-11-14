@@ -40,6 +40,43 @@ module.exports = [
         ],
     },
    {
+        entry: './webapp/assets/src/home-limited.js',
+        mode: process.env.NODE_ENV,
+        output: {
+                path: `${__dirname}/webapp/assets/dist/`,
+                filename: 'home-limited.bundle.js'
+            },
+        module: {
+            rules: [
+                        {
+                          test: /(home|cookie_notice)\.css$/,
+                          use: [
+                            'style-loader',
+                            'css-loader'
+                          ],
+                        },
+                    ],
+            },
+        resolve: {
+            alias: {
+                    locales: `${__dirname}/webapp/assets/src/locales/home-limited`,
+                },
+            },
+        plugins: [
+                new CopyPlugin({
+                  patterns: [
+                    {
+                        from: "webapp/assets/src/locales/home-limited/",
+                        to: "locales/home-limited/"
+                    },
+                  ],
+                }),
+                new webpack.EnvironmentPlugin({
+                    "TS_G_ANALYTICS_ID": process.env.TS_G_ANALYTICS_ID,
+                }),
+        ],
+    },
+   {
         entry: './webapp/assets/src/tac.js',
         mode: process.env.NODE_ENV,
         output: {

@@ -36,7 +36,13 @@ regex = {
 
 @bp_frontend_home.context_processor
 def ctx_home():
-    i18n_data = i18n.load(sf('locales/home/%s.json' % get_locale().language))
+    if is_authenticated():
+        bp_name = 'home'
+    else:
+        bp_name = 'home-limited'
+
+    lang = get_locale().language
+    i18n_data = i18n.load(sf('locales/%s/%s.json' % (bp_name, lang)))
 
     def get_number(name, mod, chk=True):
         for key in i18n_data.get_data().keys():
@@ -57,11 +63,6 @@ def ctx_home():
             delay = self.counter
             self.counter += self.increment
             return delay
-
-    if is_authenticated():
-        bp_name = 'home'
-    else:
-        bp_name = 'home-limited'
 
     return dict(
         get_number=get_number,
