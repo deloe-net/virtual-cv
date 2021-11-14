@@ -15,15 +15,12 @@ import datetime
 
 from flask import Blueprint
 from flask import g
-from flask import jsonify
 from flask import request
 
 from .forms import get_auth_form
 from .security import tokens
 from .security import tools
-from .security.tools import api_token_needed
 from webapp.blueprint.api import bp_api
-from webapp.settings import settings_pool as conf
 
 bp_api_auth = Blueprint('auth', __name__, url_prefix='/iam')
 bp_api.register_blueprint(bp_api_auth)
@@ -46,21 +43,6 @@ def verify():
 
     tools.dump_token(tokens.create_access_token(resource='basic'))
     return {'message': 'verification complete'}
-
-
-@bp_api_auth.route('/create', methods=['POST'])
-@api_token_needed
-def create():
-    code = request.args.get('code').upper().strip().replace(' ', '')
-    desc = request.args.get('desc').upper().strip()
-
-    if conf.auth.code_min_length <= len(code) <= conf.auth.code_max_length:
-        return jsonify({'errors': {'code': ['err_invalid']}})
-    elif tools.validate_code(code) is not None:
-        return jsonify({'errors': {'code': ['err_duplicate']}})
-
-    tools.register_code(code, desc)
-    return jsonify({'success': True})
 
 
 __all__ = ['bp_api_auth']
