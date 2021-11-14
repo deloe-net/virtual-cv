@@ -127,10 +127,11 @@ def is_authenticated() -> bool:
 
 def token_needed(token_type: str):
     def function_wrap(f):
-        security_level = settings_pool.auth.security_level
 
         @wraps(f)
         def decorated_function(*args, **kwargs):
+            security_level = settings_pool.auth.security_level
+
             if security_level == 2 and not is_authenticated():
                 return redirect(url_for('frontend_auth.auth_code'))
             return f(*args, **kwargs)
@@ -139,10 +140,11 @@ def token_needed(token_type: str):
 
 
 def api_token_needed(func):
-    security_level = settings_pool.auth.security_level
 
     @wraps(func)
     def decorated_function(*args, **kwargs):
+        security_level = settings_pool.auth.security_level
+
         if security_level == 2 and not is_authenticated():
             return jsonify({'errors': {'token': ['err_missing_token']}})
         return func(*args, **kwargs)
@@ -151,10 +153,11 @@ def api_token_needed(func):
 
 
 def unauthenticated_only(f):
-    security_level = settings_pool.auth.security_level
 
     @wraps(f)
     def decorated_function(*args, **kwargs):
+        security_level = settings_pool.auth.security_level
+
         if security_level == 0 or is_authenticated():
             return redirect(url_for('frontend_home.home_page'))
         return f(*args, **kwargs)

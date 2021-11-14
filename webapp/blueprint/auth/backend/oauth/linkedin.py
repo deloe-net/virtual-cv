@@ -36,9 +36,6 @@ class OAuth(object):
         def __init__(self):
             self.client_id = get_secret('LINKEDIN_CID')
             self.client_secret = get_secret('LINKEDIN_CST')
-            self.uri_redirect = url_for(
-                'api_v1.auth.oauth_callback_url', name=PROVIDER, _external=True
-            )
             self.uri_auth = 'https://www.linkedin.com/uas/oauth2/authorization'
             self.uri_token = 'https://www.linkedin.com/uas/oauth2/accessToken'
             self.scope = ['r_liteprofile', 'r_emailaddress']
@@ -52,7 +49,9 @@ class OAuth(object):
 def oauth_linkedin_redirect():
     session = OAuth2Session(
         OAuth.secrets.client_id,
-        redirect_uri=OAuth.secrets.uri_redirect,
+        redirect_uri=url_for(
+                'api_v1.auth.oauth_callback_url', name=PROVIDER, _external=True
+            ),
         scope=OAuth.secrets.scope,
         state=csrf.generate_csrf,
     )
