@@ -219,7 +219,7 @@ class TestVaultEngine(unittest.TestCase):
         d = mock.MagicMock()
         d.get.return_value = r
         p = {'path': f, 'key': t}
-        s = {'data': d}
+        s = {'data': {'data': d}}
         k = 'test_alias_key'
 
         m = mock.MagicMock()

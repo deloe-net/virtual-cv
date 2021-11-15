@@ -202,7 +202,7 @@ class VaultEngine(SecretEngine):
             mount_point=self.__mp,
         )
         if 'data' in res:
-            return res['data'].get(kv['key'], DEFAULT_NULL_RANDOM)
+            return res['data']['data'].get(kv['key'], DEFAULT_NULL_RANDOM)
         return DEFAULT_NULL_RANDOM
 
 
@@ -369,7 +369,7 @@ def get_vault_engine():
     kv_map = client.secrets.kv.read_secret_version(
         mount_point=mount_point,
         path=os.environ.get('VAULT_KV_MAP_PATH'))
-    kv_map = kv_map['data'].get(os.environ.get('VAULT_KV_MAP_KEY'))
+    kv_map = kv_map['data']['data'].get(os.environ.get('VAULT_KV_MAP_KEY'))
     return VaultEngine(kv_map, client, mp=mount_point)
 
 
