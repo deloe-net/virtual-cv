@@ -156,6 +156,7 @@ class VaultEngine(SecretEngine):
     :param kv_map: A ``dict`` object that contains the key/value map
         required to search for secrets.
     :param client: The hvac Client object for HashiCorp’s Vault.
+    :param mp: Optional mount point of secret engine
 
     Example usage::
 
@@ -163,12 +164,13 @@ class VaultEngine(SecretEngine):
         >>> engine = VaultEngine(kv_map, vault)
     """
 
-    def __init__(self, kv_map: dict, client: hvac.Client):
+    def __init__(self, kv_map: dict, client: hvac.Client, mp: str = None):
         """
         Initialize the object.
         """
         self.__kv_map = kv_map
         self.__client = client
+        self.__mp = mp
 
     def get_value(self, key: str) -> str:
         """
@@ -195,7 +197,10 @@ class VaultEngine(SecretEngine):
         if kv is None:
             return DEFAULT_NULL_RANDOM
 
-        res = self.__client.secrets.kv.read_secret_version(path=kv['path'])
+        res = self.__client.secrets.kv.read_secret_version(
+            path=kv['path'],
+            mount_point=self.__mp,
+        )
         if 'data' in res:
             return res['data'].get(kv['key'], DEFAULT_NULL_RANDOM)
         return DEFAULT_NULL_RANDOM
@@ -354,20 +359,18 @@ settings_pool = _default_parser_proxy(_global_config)
 
 
 def get_vault_engine():
+    mount_point = os.environ.get('VAULT_MOUNT_POINT')
     client = hvac.Client(url=os.environ.get('VAULT_ADDR'))
     client.auth.approle.login(
         role_id=os.environ.get('VAULT_ROLE_ID'),
         secret_id=os.environ.get('VAULT_SECRET_ID'),
     )
 
-    client.secrets.kv.v2.configure(
-        mount_point=os.environ.get('VAULT_MOUNT_POINT'),
-    )
-
     kv_map = client.secrets.kv.read_secret_version(
+        mount_point=mount_point,
         path=os.environ.get('VAULT_KV_MAP_PATH'))
     kv_map = kv_map['data'].get(os.environ.get('VAULT_KV_MAP_KEY'))
-    return VaultEngine(kv_map, client)
+    return VaultEngine(kv_map, client, mp=mount_point)
 
 
 def set_secret_engine(engine: SecretEngine):
