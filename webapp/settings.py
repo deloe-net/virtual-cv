@@ -360,6 +360,10 @@ def get_vault_engine():
         secret_id=os.environ.get('VAULT_SECRET_ID'),
     )
 
+    client.secrets.kv.v2.read_configuration(
+        mount_point=os.environ.get('VAULT_MOUNT_POINT'),
+    )
+
     kv_map = client.secrets.kv.read_secret_version(
         path=os.environ.get('VAULT_KV_MAP_PATH'))
     kv_map = kv_map['data'].get(os.environ.get('VAULT_KV_MAP_KEY'))
