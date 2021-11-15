@@ -199,7 +199,8 @@ class TestVaultEngine(unittest.TestCase):
         c = mock.MagicMock()
         m = {}
         e = VaultEngine(m, c)
-        d = {'_VaultEngine__kv_map': m, '_VaultEngine__client': c}
+        d = {'_VaultEngine__kv_map': m, '_VaultEngine__client': c,
+             '_VaultEngine__mp': None}
         self.assertDictEqual(e.__dict__, d)
 
     def test_vault_get_value_null(self):
@@ -229,7 +230,9 @@ class TestVaultEngine(unittest.TestCase):
 
         self.assertEqual(e.get_value(k), r)
         m.get.assert_called_once_with(k)
-        c.secrets.kv.read_secret_version.assert_called_once_with(path=f)
+        c.secrets.kv.read_secret_version.assert_called_once_with(
+            path=f,
+            mount_point=None)
         d.get.assert_called_once_with(t, settings.DEFAULT_NULL_RANDOM)
 
     def test_vault_get_value_err(self):
@@ -247,7 +250,8 @@ class TestVaultEngine(unittest.TestCase):
         e = VaultEngine(m, c)
         self.assertEqual(e.get_value(k), settings.DEFAULT_NULL_RANDOM)
         m.get.assert_called_once_with(k)
-        c.secrets.kv.read_secret_version.assert_called_once_with(path=f)
+        c.secrets.kv.read_secret_version.assert_called_once_with(
+            path=f, mount_point=None)
         d.get.assert_not_called()
 
 
