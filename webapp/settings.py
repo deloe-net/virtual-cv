@@ -361,8 +361,8 @@ def get_vault_engine():
     )
 
     kv_map = client.secrets.kv.read_secret_version(
-        path=os.environ.pop('VAULT_KV_MAP_PATH'))
-    kv_map = kv_map['data'].get(os.environ.pop('VAULT_KV_MAP_KEY'))
+        path=os.environ.get('VAULT_KV_MAP_PATH'))
+    kv_map = kv_map['data'].get(os.environ.get('VAULT_KV_MAP_KEY'))
     return VaultEngine(kv_map, client)
 
 
