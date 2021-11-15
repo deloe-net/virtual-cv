@@ -15,12 +15,13 @@ import os
 
 from flask import send_from_directory as send
 
+from ..assets import sf
 from ..webapp import core
 
-
 _static = os.path.join(core.static_folder, 'multimedia/images')
+filename = os.path.basename(sf('multimedia/images/favicon.ico'))
 
 
 @core.route('/favicon.ico')
 def favicon():
-    return send(_static, 'favicon.ico', mimetype='image/vnd.microsoft.icon')
+    return send(_static, filename, mimetype='image/vnd.microsoft.icon')

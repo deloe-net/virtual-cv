@@ -17,6 +17,7 @@ from humanfriendly import parse_timespan
 from playhouse import db_url
 
 from webapp.assets import assets
+from webapp.assets import sf
 from webapp.blueprint import auth
 from webapp.blueprint import cv
 from webapp.callbacks import MainCTX
@@ -62,7 +63,7 @@ def main(start: bool = False):
     MainCTX.init()
     assets.update_salt(get_secret('ASSETS_SALT', default=os.urandom(2048)))
     cv.backend.qr.add_logo(os.path.join(core.static_folder,
-                                        'multimedia/images/avtar.png'))
+                                        sf('multimedia/images/avtar.png')))
     core.config.update(
         SERVER_NAME=settings.server.domain_name,
         WTF_CSRF_SECRET_KEY=os.urandom(2048),
