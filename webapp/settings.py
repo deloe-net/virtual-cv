@@ -15,6 +15,7 @@ import abc
 import ast
 import base64
 import glob
+import json
 import os
 import uuid
 from binascii import Error as binasciiError
@@ -370,6 +371,7 @@ def get_vault_engine():
         mount_point=mount_point,
         path=os.environ.get('VAULT_KV_MAP_PATH'))
     kv_map = kv_map['data']['data'].get(os.environ.get('VAULT_KV_MAP_KEY'))
+    kv_map = json.loads(kv_map)
     return VaultEngine(kv_map, client, mp=mount_point)
 
 
