@@ -3,7 +3,8 @@
             integrationID: "{{ settings.assistant.integration_id }}",
             region: "{{ settings.assistant.region }}",
             serviceInstanceID: "{{ settings.assistant.service_instance_id }}",
-            onLoad: function(instance) { instance.render(); }
+            onLoad: function(instance) { instance.render(); },
+            openChatByDefault: {{ settings.assistant.open_chat }}
         };
       setTimeout(function(){
         const t=document.createElement('script');
