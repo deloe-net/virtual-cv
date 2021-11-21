@@ -12,6 +12,7 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 import io
+import os
 
 from flask import Blueprint
 from flask import g
@@ -20,6 +21,9 @@ from flask import url_for
 
 from .qr import qr
 from webapp.blueprint.api import bp_api
+from webapp.blueprint.auth.backend.security import tools
+from webapp.locales import get_locale
+from webapp.settings import settings_pool as settings
 
 bp_api_cv = Blueprint('api_cv', __name__, url_prefix='/cv')
 bp_api.register_blueprint(bp_api_cv)
@@ -40,7 +44,13 @@ def qr_img():
 
 @bp_api_cv.route('/download', methods=['GET'])
 def download():
-    return 'download'
+    lang = get_locale().language
+    level = 'full' if tools.is_authenticated() else 'limited'
+
+    path = settings.cv.source_path.format(user_lang=lang, level=level)
+    if not os.path.exists(path):
+        return 'error'
+    return send(path, mimetype=settings.cv.mimetype)
 
 
 __all__ = ['bp_api_cv']
